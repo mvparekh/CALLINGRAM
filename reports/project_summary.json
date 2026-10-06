@@ -1,0 +1,119 @@
+{
+  "project_name": "CALLNGRAM",
+  "description": "Customer Call Language Analytics via N-gram Language Modeling",
+  "apptek": {
+    "total_transcripts": 1746,
+    "train_transcripts": 1396,
+    "test_transcripts": 350,
+    "domains": [
+      "agriculture",
+      "aviation",
+      "banking",
+      "deliveryservice",
+      "energy",
+      "entertainment",
+      "finance",
+      "food",
+      "health",
+      "hospitality",
+      "insurance",
+      "realestate",
+      "retail",
+      "technology",
+      "telecom",
+      "travel"
+    ],
+    "accents": [
+      "en-AU",
+      "en-CA",
+      "en-CN",
+      "en-GB",
+      "en-GB_SCT",
+      "en-GB_WLS",
+      "en-IE",
+      "en-IN",
+      "en-MX",
+      "en-SG",
+      "en-US_Aave",
+      "en-US_General",
+      "en-US_Southern",
+      "en-ZA"
+    ],
+    "customer_records": 873,
+    "agent_records": 873,
+    "total_words": 1274670,
+    "vocabulary_size": 17868,
+    "avg_words_per_transcript": 730.05,
+    "median_words_per_transcript": 663.5,
+    "min_words_per_transcript": 104,
+    "max_words_per_transcript": 2485,
+    "total_sentences": 119883
+  },
+  "bitext": {
+    "total_examples": 26872,
+    "categories_count": 11,
+    "categories": [
+      "ACCOUNT",
+      "CANCEL",
+      "CONTACT",
+      "DELIVERY",
+      "FEEDBACK",
+      "INVOICE",
+      "ORDER",
+      "PAYMENT",
+      "REFUND",
+      "SHIPPING",
+      "SUBSCRIPTION"
+    ],
+    "intents_count": 27,
+    "intents": [
+      "cancel_order",
+      "change_order",
+      "change_shipping_address",
+      "check_cancellation_fee",
+      "check_invoice",
+      "check_payment_methods",
+      "check_refund_policy",
+      "complaint",
+      "contact_customer_service",
+      "contact_human_agent",
+      "create_account",
+      "delete_account",
+      "delivery_options",
+      "delivery_period",
+      "edit_account",
+      "get_invoice",
+      "get_refund",
+      "newsletter_subscription",
+      "payment_issue",
+      "place_order",
+      "recover_password",
+      "registration_problems",
+      "review",
+      "set_up_shipping_address",
+      "switch_account",
+      "track_order",
+      "track_refund"
+    ]
+  },
+  "models_evaluated": [
+    {
+      "model": "Unigram (Add-1)",
+      "mean_perplexity": 551.93,
+      "median_perplexity": 497.73,
+      "transcripts_evaluated": 350
+    },
+    {
+      "model": "Bigram (Add-1)",
+      "mean_perplexity": 586.42,
+      "median_perplexity": 520.03,
+      "transcripts_evaluated": 350
+    },
+    {
+      "model": "Trigram (Add-1)",
+      "mean_perplexity": 2845.61,
+      "median_perplexity": 2620.89,
+      "transcripts_evaluated": 350
+    }
+  ]
+}

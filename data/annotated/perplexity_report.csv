@@ -1,0 +1,4 @@
+model,mean_perplexity,median_perplexity,transcripts_evaluated
+Unigram (Add-1),551.93,497.73,350
+Bigram (Add-1),586.42,520.03,350
+Trigram (Add-1),2845.61,2620.89,350

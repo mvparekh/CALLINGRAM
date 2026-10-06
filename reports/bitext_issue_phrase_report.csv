@@ -1,0 +1,1141 @@
+level,target,ngram_order,phrase,count
+category,ACCOUNT,unigram,account,5400
+category,ACCOUNT,unigram,i,3659
+category,ACCOUNT,unigram,to,3368
+category,ACCOUNT,unigram,the,1748
+category,ACCOUNT,unigram,my,1642
+category,ACCOUNT,unigram,a,1564
+category,ACCOUNT,unigram,do,1265
+category,ACCOUNT,unigram,of,1167
+category,ACCOUNT,unigram,help,1069
+category,ACCOUNT,unigram,type,1011
+category,ACCOUNT,bigram,account type,1011
+category,ACCOUNT,bigram,type account,869
+category,ACCOUNT,bigram,account category,822
+category,ACCOUNT,bigram,category account,699
+category,ACCOUNT,bigram,i need,611
+category,ACCOUNT,bigram,i have,590
+category,ACCOUNT,bigram,to do,531
+category,ACCOUNT,bigram,do to,508
+category,ACCOUNT,bigram,my user,491
+category,ACCOUNT,bigram,help me,489
+category,ACCOUNT,trigram,account type account,869
+category,ACCOUNT,trigram,account category account,699
+category,ACCOUNT,trigram,to do to,504
+category,ACCOUNT,trigram,i do not,327
+category,ACCOUNT,trigram,i have to,312
+category,ACCOUNT,trigram,do not know,288
+category,ACCOUNT,trigram,the account type,264
+category,ACCOUNT,trigram,change to the,261
+category,ACCOUNT,trigram,i need to,238
+category,ACCOUNT,trigram,to the account,231
+category,CANCEL,unigram,the,892
+category,CANCEL,unigram,i,700
+category,CANCEL,unigram,to,536
+category,CANCEL,unigram,early,363
+category,CANCEL,unigram,see,349
+category,CANCEL,unigram,termination,340
+category,CANCEL,unigram,check,306
+category,CANCEL,unigram,help,242
+category,CANCEL,unigram,do,219
+category,CANCEL,unigram,can,196
+category,CANCEL,bigram,see the,338
+category,CANCEL,bigram,the early,328
+category,CANCEL,bigram,check the,294
+category,CANCEL,bigram,to see,241
+category,CANCEL,bigram,to check,201
+category,CANCEL,bigram,early exit,189
+category,CANCEL,bigram,the withdrawal,170
+category,CANCEL,bigram,early termination,166
+category,CANCEL,bigram,the termination,153
+category,CANCEL,bigram,the cancellation,149
+category,CANCEL,trigram,to see the,235
+category,CANCEL,trigram,to check the,199
+category,CANCEL,trigram,the early exit,166
+category,CANCEL,trigram,the early termination,154
+category,CANCEL,trigram,see the early,141
+category,CANCEL,trigram,check the early,103
+category,CANCEL,trigram,i have to,70
+category,CANCEL,trigram,to do to,69
+category,CANCEL,trigram,see the withdrawal,63
+category,CANCEL,trigram,you help me,62
+category,CONTACT,unigram,to,1776
+category,CONTACT,unigram,i,1772
+category,CONTACT,unigram,customer,953
+category,CONTACT,unigram,can,716
+category,CONTACT,unigram,with,685
+category,CONTACT,unigram,what,667
+category,CONTACT,unigram,help,542
+category,CONTACT,unigram,do,537
+category,CONTACT,unigram,assistance,438
+category,CONTACT,unigram,a,433
+category,CONTACT,bigram,i can,406
+category,CONTACT,bigram,customer support,366
+category,CONTACT,bigram,customer service,326
+category,CONTACT,bigram,to speak,271
+category,CONTACT,bigram,i need,269
+category,CONTACT,bigram,to talk,267
+category,CONTACT,bigram,what hours,253
+category,CONTACT,bigram,customer assistance,237
+category,CONTACT,bigram,help me,233
+category,CONTACT,bigram,to do,211
+category,CONTACT,trigram,hours i can,203
+category,CONTACT,trigram,what hours i,201
+category,CONTACT,trigram,to do to,197
+category,CONTACT,trigram,at what time,184
+category,CONTACT,trigram,to speak with,152
+category,CONTACT,trigram,to talk to,149
+category,CONTACT,trigram,what time i,149
+category,CONTACT,trigram,time i can,148
+category,CONTACT,trigram,i have to,145
+category,CONTACT,trigram,i can call,132
+category,DELIVERY,unigram,i,1700
+category,DELIVERY,unigram,to,1465
+category,DELIVERY,unigram,how,829
+category,DELIVERY,unigram,can,803
+category,DELIVERY,unigram,delivery,731
+category,DELIVERY,unigram,my,629
+category,DELIVERY,unigram,see,628
+category,DELIVERY,unigram,the,543
+category,DELIVERY,unigram,check,513
+category,DELIVERY,unigram,help,492
+category,DELIVERY,bigram,can i,600
+category,DELIVERY,bigram,to see,455
+category,DELIVERY,bigram,i expect,361
+category,DELIVERY,bigram,soon can,359
+category,DELIVERY,bigram,how soon,356
+category,DELIVERY,bigram,to check,354
+category,DELIVERY,bigram,to arrive,266
+category,DELIVERY,bigram,i have,261
+category,DELIVERY,bigram,help me,248
+category,DELIVERY,bigram,see how,238
+category,DELIVERY,trigram,soon can i,358
+category,DELIVERY,trigram,can i expect,356
+category,DELIVERY,trigram,how soon can,352
+category,DELIVERY,trigram,i expect my,205
+category,DELIVERY,trigram,order from delivery,180
+category,DELIVERY,trigram,to see how,165
+category,DELIVERY,trigram,how long it,154
+category,DELIVERY,trigram,i expect the,153
+category,DELIVERY,trigram,when will my,152
+category,DELIVERY,trigram,long it takes,147
+category,FEEDBACK,unigram,a,1655
+category,FEEDBACK,unigram,to,1297
+category,FEEDBACK,unigram,i,1217
+category,FEEDBACK,unigram,your,677
+category,FEEDBACK,unigram,help,549
+category,FEEDBACK,unigram,feedback,549
+category,FEEDBACK,unigram,against,543
+category,FEEDBACK,unigram,for,475
+category,FEEDBACK,unigram,ur,420
+category,FEEDBACK,unigram,claim,400
+category,FEEDBACK,bigram,against your,341
+category,FEEDBACK,bigram,feedback for,265
+category,FEEDBACK,bigram,make a,259
+category,FEEDBACK,bigram,file a,258
+category,FEEDBACK,bigram,to leave,246
+category,FEEDBACK,bigram,help me,240
+category,FEEDBACK,bigram,lodge a,236
+category,FEEDBACK,bigram,your company,236
+category,FEEDBACK,bigram,a customer,232
+category,FEEDBACK,bigram,claim against,231
+category,FEEDBACK,trigram,to file a,185
+category,FEEDBACK,trigram,to make a,172
+category,FEEDBACK,trigram,to lodge a,160
+category,FEEDBACK,trigram,claim against your,146
+category,FEEDBACK,trigram,against your business,124
+category,FEEDBACK,trigram,against your company,124
+category,FEEDBACK,trigram,complaint against your,111
+category,FEEDBACK,trigram,feedback for a,109
+category,FEEDBACK,trigram,a consumer claim,100
+category,FEEDBACK,trigram,for a product,99
+category,INVOICE,unigram,i,1529
+category,INVOICE,unigram,to,1403
+category,INVOICE,unigram,from,916
+category,INVOICE,unigram,person,887
+category,INVOICE,unigram,name,887
+category,INVOICE,unigram,bill,770
+category,INVOICE,unigram,do,759
+category,INVOICE,unigram,my,728
+category,INVOICE,unigram,invoice,713
+category,INVOICE,unigram,the,653
+category,INVOICE,bigram,person name,887
+category,INVOICE,bigram,from person,867
+category,INVOICE,bigram,to do,376
+category,INVOICE,bigram,do to,357
+category,INVOICE,bigram,i need,302
+category,INVOICE,bigram,know what,276
+category,INVOICE,bigram,to download,268
+category,INVOICE,bigram,i have,264
+category,INVOICE,bigram,bill from,259
+category,INVOICE,bigram,my invoice,254
+category,INVOICE,trigram,from person name,867
+category,INVOICE,trigram,to do to,356
+category,INVOICE,trigram,bill from person,257
+category,INVOICE,trigram,bills from person,213
+category,INVOICE,trigram,i do not,200
+category,INVOICE,trigram,i have to,199
+category,INVOICE,trigram,do not know,196
+category,INVOICE,trigram,quick look at,195
+category,INVOICE,trigram,know what i,195
+category,INVOICE,trigram,a quick look,185
+category,ORDER,unigram,order,4542
+category,ORDER,unigram,number,2907
+category,ORDER,unigram,i,2477
+category,ORDER,unigram,to,1942
+category,ORDER,unigram,purchase,1499
+category,ORDER,unigram,of,1187
+category,ORDER,unigram,help,1067
+category,ORDER,unigram,do,659
+category,ORDER,unigram,need,658
+category,ORDER,unigram,can,573
+category,ORDER,bigram,order number,2907
+category,ORDER,bigram,order order,1454
+category,ORDER,bigram,purchase order,1351
+category,ORDER,bigram,i need,491
+category,ORDER,bigram,help me,407
+category,ORDER,bigram,of order,345
+category,ORDER,bigram,i want,328
+category,ORDER,bigram,i have,323
+category,ORDER,bigram,eta of,312
+category,ORDER,bigram,need help,272
+category,ORDER,trigram,order order number,1454
+category,ORDER,trigram,purchase order number,1351
+category,ORDER,trigram,of order order,342
+category,ORDER,trigram,of purchase order,269
+category,ORDER,trigram,the eta of,256
+category,ORDER,trigram,cancel purchase order,232
+category,ORDER,trigram,i need help,202
+category,ORDER,trigram,to do to,186
+category,ORDER,trigram,i have to,181
+category,ORDER,trigram,order number status,158
+category,PAYMENT,unigram,payment,1609
+category,PAYMENT,unigram,i,1271
+category,PAYMENT,unigram,to,1113
+category,PAYMENT,unigram,with,775
+category,PAYMENT,unigram,help,627
+category,PAYMENT,unigram,of,551
+category,PAYMENT,unigram,the,418
+category,PAYMENT,unigram,payments,350
+category,PAYMENT,unigram,online,346
+category,PAYMENT,unigram,options,340
+category,PAYMENT,bigram,with online,340
+category,PAYMENT,bigram,payment options,330
+category,PAYMENT,bigram,payment methods,324
+category,PAYMENT,bigram,help me,275
+category,PAYMENT,bigram,payment modalities,271
+category,PAYMENT,bigram,i need,250
+category,PAYMENT,bigram,with payment,231
+category,PAYMENT,bigram,i want,227
+category,PAYMENT,bigram,inform of,224
+category,PAYMENT,bigram,notify of,203
+category,PAYMENT,trigram,with online payment,182
+category,PAYMENT,trigram,to inform of,154
+category,PAYMENT,trigram,with online payments,146
+category,PAYMENT,trigram,to notify of,137
+category,PAYMENT,trigram,you help me,114
+category,PAYMENT,trigram,i have to,109
+category,PAYMENT,trigram,i need assistance,91
+category,PAYMENT,trigram,the accepted payment,90
+category,PAYMENT,trigram,i need help,90
+category,PAYMENT,trigram,the allowed payment,88
+category,REFUND,unigram,i,2601
+category,REFUND,unigram,to,1555
+category,REFUND,unigram,refund,1159
+category,REFUND,unigram,of,1056
+category,REFUND,unigram,a,1054
+category,REFUND,unigram,can,968
+category,REFUND,unigram,help,761
+category,REFUND,unigram,money,709
+category,REFUND,unigram,for,670
+category,REFUND,unigram,my,659
+category,REFUND,bigram,can i,772
+category,REFUND,bigram,refund amount,624
+category,REFUND,bigram,to see,406
+category,REFUND,bigram,cases can,403
+category,REFUND,bigram,currency symbol,372
+category,REFUND,bigram,symbol refund,372
+category,REFUND,bigram,i ask,351
+category,REFUND,bigram,for a,350
+category,REFUND,bigram,my money,347
+category,REFUND,bigram,help me,345
+category,REFUND,trigram,cases can i,400
+category,REFUND,trigram,currency symbol refund,372
+category,REFUND,trigram,symbol refund amount,372
+category,REFUND,trigram,can i ask,345
+category,REFUND,trigram,can i request,290
+category,REFUND,trigram,i ask for,246
+category,REFUND,trigram,of my money,239
+category,REFUND,trigram,of currency symbol,220
+category,REFUND,trigram,refund amount dollars,218
+category,REFUND,trigram,in which cases,202
+category,SHIPPING,unigram,address,1905
+category,SHIPPING,unigram,i,1314
+category,SHIPPING,unigram,to,885
+category,SHIPPING,unigram,shipping,776
+category,SHIPPING,unigram,delivery,753
+category,SHIPPING,unigram,my,732
+category,SHIPPING,unigram,the,654
+category,SHIPPING,unigram,a,511
+category,SHIPPING,unigram,up,467
+category,SHIPPING,unigram,have,353
+category,SHIPPING,bigram,shipping address,759
+category,SHIPPING,bigram,delivery address,725
+category,SHIPPING,bigram,i have,349
+category,SHIPPING,bigram,trying to,219
+category,SHIPPING,bigram,i need,217
+category,SHIPPING,bigram,address up,210
+category,SHIPPING,bigram,i want,197
+category,SHIPPING,bigram,my delivery,182
+category,SHIPPING,bigram,to set,178
+category,SHIPPING,bigram,my shipping,175
+category,SHIPPING,trigram,my delivery address,175
+category,SHIPPING,trigram,my shipping address,172
+category,SHIPPING,trigram,the shipping address,155
+category,SHIPPING,trigram,the delivery address,124
+category,SHIPPING,trigram,new shipping address,119
+category,SHIPPING,trigram,new delivery address,119
+category,SHIPPING,trigram,secondary shipping address,118
+category,SHIPPING,trigram,secondary delivery address,110
+category,SHIPPING,trigram,shipping address up,105
+category,SHIPPING,trigram,delivery address up,97
+category,SUBSCRIPTION,unigram,to,1060
+category,SUBSCRIPTION,unigram,newsletter,940
+category,SUBSCRIPTION,unigram,i,635
+category,SUBSCRIPTION,unigram,the,528
+category,SUBSCRIPTION,unigram,help,301
+category,SUBSCRIPTION,unigram,your,287
+category,SUBSCRIPTION,unigram,subscription,284
+category,SUBSCRIPTION,unigram,company,262
+category,SUBSCRIPTION,unigram,corporate,235
+category,SUBSCRIPTION,unigram,me,212
+category,SUBSCRIPTION,bigram,to the,250
+category,SUBSCRIPTION,bigram,company newsletter,247
+category,SUBSCRIPTION,bigram,corporate newsletter,223
+category,SUBSCRIPTION,bigram,to your,189
+category,SUBSCRIPTION,bigram,the newsletter,183
+category,SUBSCRIPTION,bigram,up to,152
+category,SUBSCRIPTION,bigram,help me,149
+category,SUBSCRIPTION,bigram,subscription to,139
+category,SUBSCRIPTION,bigram,newsletter subscription,139
+category,SUBSCRIPTION,bigram,your newsletter,133
+category,SUBSCRIPTION,trigram,sign up to,127
+category,SUBSCRIPTION,trigram,the corporate newsletter,108
+category,SUBSCRIPTION,trigram,the company newsletter,106
+category,SUBSCRIPTION,trigram,to the newsletter,106
+category,SUBSCRIPTION,trigram,to your newsletter,92
+category,SUBSCRIPTION,trigram,to sign up,83
+category,SUBSCRIPTION,trigram,up to the,82
+category,SUBSCRIPTION,trigram,my subscription to,73
+category,SUBSCRIPTION,trigram,your company newsletter,66
+category,SUBSCRIPTION,trigram,to the company,63
+intent,cancel_order,unigram,order,1379
+intent,cancel_order,unigram,number,973
+intent,cancel_order,unigram,i,664
+intent,cancel_order,unigram,purchase,552
+intent,cancel_order,unigram,cancel,427
+intent,cancel_order,unigram,to,299
+intent,cancel_order,unigram,help,278
+intent,cancel_order,unigram,canceling,220
+intent,cancel_order,unigram,cancelling,212
+intent,cancel_order,unigram,need,184
+intent,cancel_order,bigram,order number,973
+intent,cancel_order,bigram,purchase order,544
+intent,cancel_order,bigram,order order,395
+intent,cancel_order,bigram,to cancel,254
+intent,cancel_order,bigram,cancel purchase,232
+intent,cancel_order,bigram,cancel order,145
+intent,cancel_order,bigram,i need,144
+intent,cancel_order,bigram,canceling purchase,124
+intent,cancel_order,bigram,cancelling purchase,116
+intent,cancel_order,bigram,need help,96
+intent,cancel_order,trigram,purchase order number,544
+intent,cancel_order,trigram,order order number,395
+intent,cancel_order,trigram,cancel purchase order,232
+intent,cancel_order,trigram,to cancel purchase,150
+intent,cancel_order,trigram,cancel order order,144
+intent,cancel_order,trigram,canceling purchase order,124
+intent,cancel_order,trigram,cancelling purchase order,116
+intent,cancel_order,trigram,to cancel order,90
+intent,cancel_order,trigram,canceling order order,84
+intent,cancel_order,trigram,cancelling order order,78
+intent,change_order,unigram,order,1518
+intent,change_order,unigram,number,965
+intent,change_order,unigram,i,523
+intent,change_order,unigram,to,514
+intent,change_order,unigram,purchase,391
+intent,change_order,unigram,of,278
+intent,change_order,unigram,help,275
+intent,change_order,unigram,from,166
+intent,change_order,unigram,some,164
+intent,change_order,unigram,an,152
+intent,change_order,bigram,order number,965
+intent,change_order,bigram,order order,541
+intent,change_order,bigram,purchase order,390
+intent,change_order,bigram,of order,153
+intent,change_order,bigram,of purchase,116
+intent,change_order,bigram,help me,106
+intent,change_order,bigram,from order,100
+intent,change_order,bigram,i need,94
+intent,change_order,bigram,an item,88
+intent,change_order,bigram,can i,81
+intent,change_order,trigram,order order number,541
+intent,change_order,trigram,purchase order number,390
+intent,change_order,trigram,of order order,153
+intent,change_order,trigram,of purchase order,116
+intent,change_order,trigram,from order order,98
+intent,change_order,trigram,to order order,76
+intent,change_order,trigram,from purchase order,62
+intent,change_order,trigram,to purchase order,53
+intent,change_order,trigram,edit order order,51
+intent,change_order,trigram,i have to,46
+intent,change_shipping_address,unigram,address,937
+intent,change_shipping_address,unigram,i,646
+intent,change_shipping_address,unigram,to,450
+intent,change_shipping_address,unigram,my,433
+intent,change_shipping_address,unigram,the,380
+intent,change_shipping_address,unigram,shipping,288
+intent,change_shipping_address,unigram,delivery,277
+intent,change_shipping_address,unigram,trying,202
+intent,change_shipping_address,unigram,have,174
+intent,change_shipping_address,unigram,about,155
+intent,change_shipping_address,bigram,shipping address,281
+intent,change_shipping_address,bigram,delivery address,267
+intent,change_shipping_address,bigram,trying to,201
+intent,change_shipping_address,bigram,i have,170
+intent,change_shipping_address,bigram,the address,148
+intent,change_shipping_address,bigram,my address,142
+intent,change_shipping_address,bigram,my delivery,134
+intent,change_shipping_address,bigram,my shipping,120
+intent,change_shipping_address,bigram,i want,116
+intent,change_shipping_address,bigram,the shipping,109
+intent,change_shipping_address,trigram,my delivery address,130
+intent,change_shipping_address,trigram,my shipping address,117
+intent,change_shipping_address,trigram,the shipping address,106
+intent,change_shipping_address,trigram,the delivery address,82
+intent,change_shipping_address,trigram,to update my,48
+intent,change_shipping_address,trigram,trying to update,47
+intent,change_shipping_address,trigram,to modify my,45
+intent,change_shipping_address,trigram,trying to change,41
+intent,change_shipping_address,trigram,trying to edit,40
+intent,change_shipping_address,trigram,to correct my,38
+intent,check_cancellation_fee,unigram,the,892
+intent,check_cancellation_fee,unigram,i,700
+intent,check_cancellation_fee,unigram,to,536
+intent,check_cancellation_fee,unigram,early,363
+intent,check_cancellation_fee,unigram,see,349
+intent,check_cancellation_fee,unigram,termination,340
+intent,check_cancellation_fee,unigram,check,306
+intent,check_cancellation_fee,unigram,help,242
+intent,check_cancellation_fee,unigram,do,219
+intent,check_cancellation_fee,unigram,can,196
+intent,check_cancellation_fee,bigram,see the,338
+intent,check_cancellation_fee,bigram,the early,328
+intent,check_cancellation_fee,bigram,check the,294
+intent,check_cancellation_fee,bigram,to see,241
+intent,check_cancellation_fee,bigram,to check,201
+intent,check_cancellation_fee,bigram,early exit,189
+intent,check_cancellation_fee,bigram,the withdrawal,170
+intent,check_cancellation_fee,bigram,early termination,166
+intent,check_cancellation_fee,bigram,the termination,153
+intent,check_cancellation_fee,bigram,the cancellation,149
+intent,check_cancellation_fee,trigram,to see the,235
+intent,check_cancellation_fee,trigram,to check the,199
+intent,check_cancellation_fee,trigram,the early exit,166
+intent,check_cancellation_fee,trigram,the early termination,154
+intent,check_cancellation_fee,trigram,see the early,141
+intent,check_cancellation_fee,trigram,check the early,103
+intent,check_cancellation_fee,trigram,i have to,70
+intent,check_cancellation_fee,trigram,to do to,69
+intent,check_cancellation_fee,trigram,see the withdrawal,63
+intent,check_cancellation_fee,trigram,you help me,62
+intent,check_invoice,unigram,i,669
+intent,check_invoice,unigram,to,584
+intent,check_invoice,unigram,from,452
+intent,check_invoice,unigram,person,438
+intent,check_invoice,unigram,name,438
+intent,check_invoice,unigram,bill,397
+intent,check_invoice,unigram,my,372
+intent,check_invoice,unigram,invoice,335
+intent,check_invoice,unigram,the,305
+intent,check_invoice,unigram,look,302
+intent,check_invoice,bigram,person name,438
+intent,check_invoice,bigram,from person,427
+intent,check_invoice,bigram,look at,198
+intent,check_invoice,bigram,quick look,195
+intent,check_invoice,bigram,a quick,189
+intent,check_invoice,bigram,i need,139
+intent,check_invoice,bigram,bill from,130
+intent,check_invoice,bigram,my bill,128
+intent,check_invoice,bigram,to do,128
+intent,check_invoice,bigram,do to,116
+intent,check_invoice,trigram,from person name,427
+intent,check_invoice,trigram,quick look at,195
+intent,check_invoice,trigram,a quick look,185
+intent,check_invoice,trigram,bill from person,129
+intent,check_invoice,trigram,to do to,116
+intent,check_invoice,trigram,bills from person,109
+intent,check_invoice,trigram,invoices from person,95
+intent,check_invoice,trigram,look at the,83
+intent,check_invoice,trigram,i have to,82
+intent,check_invoice,trigram,give a quick,82
+intent,check_payment_methods,unigram,payment,987
+intent,check_payment_methods,unigram,i,623
+intent,check_payment_methods,unigram,to,553
+intent,check_payment_methods,unigram,the,406
+intent,check_payment_methods,unigram,options,340
+intent,check_payment_methods,unigram,methods,329
+intent,check_payment_methods,unigram,help,312
+intent,check_payment_methods,unigram,see,289
+intent,check_payment_methods,unigram,modalities,285
+intent,check_payment_methods,unigram,your,254
+intent,check_payment_methods,bigram,payment options,330
+intent,check_payment_methods,bigram,payment methods,324
+intent,check_payment_methods,bigram,payment modalities,271
+intent,check_payment_methods,bigram,accepted payment,201
+intent,check_payment_methods,bigram,to see,200
+intent,check_payment_methods,bigram,allowed payment,184
+intent,check_payment_methods,bigram,available payment,175
+intent,check_payment_methods,bigram,to check,152
+intent,check_payment_methods,bigram,help me,151
+intent,check_payment_methods,bigram,to list,143
+intent,check_payment_methods,trigram,the accepted payment,90
+intent,check_payment_methods,trigram,the allowed payment,88
+intent,check_payment_methods,trigram,the available payment,78
+intent,check_payment_methods,trigram,to see the,75
+intent,check_payment_methods,trigram,accepted payment options,75
+intent,check_payment_methods,trigram,to list the,73
+intent,check_payment_methods,trigram,what payment options,63
+intent,check_payment_methods,trigram,see what payment,61
+intent,check_payment_methods,trigram,allowed payment modalities,60
+intent,check_payment_methods,trigram,to check the,60
+intent,check_refund_policy,unigram,i,1168
+intent,check_refund_policy,unigram,can,749
+intent,check_refund_policy,unigram,to,661
+intent,check_refund_policy,unigram,in,597
+intent,check_refund_policy,unigram,cases,405
+intent,check_refund_policy,unigram,see,404
+intent,check_refund_policy,unigram,help,366
+intent,check_refund_policy,unigram,ask,342
+intent,check_refund_policy,unigram,what,332
+intent,check_refund_policy,unigram,which,316
+intent,check_refund_policy,bigram,can i,690
+intent,check_refund_policy,bigram,cases can,403
+intent,check_refund_policy,bigram,i ask,340
+intent,check_refund_policy,bigram,in what,294
+intent,check_refund_policy,bigram,i request,294
+intent,check_refund_policy,bigram,in which,290
+intent,check_refund_policy,bigram,to see,282
+intent,check_refund_policy,bigram,see in,242
+intent,check_refund_policy,bigram,ask for,236
+intent,check_refund_policy,bigram,which cases,202
+intent,check_refund_policy,trigram,cases can i,400
+intent,check_refund_policy,trigram,can i ask,336
+intent,check_refund_policy,trigram,can i request,287
+intent,check_refund_policy,trigram,i ask for,235
+intent,check_refund_policy,trigram,in which cases,202
+intent,check_refund_policy,trigram,which cases can,201
+intent,check_refund_policy,trigram,in what cases,194
+intent,check_refund_policy,trigram,what cases can,193
+intent,check_refund_policy,trigram,situations can i,176
+intent,check_refund_policy,trigram,to see in,168
+intent,complaint,unigram,a,907
+intent,complaint,unigram,i,605
+intent,complaint,unigram,to,601
+intent,complaint,unigram,against,543
+intent,complaint,unigram,claim,400
+intent,complaint,unigram,your,384
+intent,complaint,unigram,complaint,309
+intent,complaint,unigram,help,300
+intent,complaint,unigram,customer,275
+intent,complaint,unigram,file,273
+intent,complaint,bigram,against your,341
+intent,complaint,bigram,make a,259
+intent,complaint,bigram,file a,258
+intent,complaint,bigram,lodge a,236
+intent,complaint,bigram,a customer,232
+intent,complaint,bigram,claim against,231
+intent,complaint,bigram,a consumer,216
+intent,complaint,bigram,against ur,198
+intent,complaint,bigram,to file,189
+intent,complaint,bigram,to make,181
+intent,complaint,trigram,to file a,185
+intent,complaint,trigram,to make a,172
+intent,complaint,trigram,to lodge a,160
+intent,complaint,trigram,claim against your,146
+intent,complaint,trigram,against your business,124
+intent,complaint,trigram,against your company,124
+intent,complaint,trigram,complaint against your,111
+intent,complaint,trigram,a consumer claim,100
+intent,complaint,trigram,a customer claim,94
+intent,complaint,trigram,against ur company,88
+intent,contact_customer_service,unigram,i,991
+intent,contact_customer_service,unigram,customer,953
+intent,contact_customer_service,unigram,to,764
+intent,contact_customer_service,unigram,can,544
+intent,contact_customer_service,unigram,what,517
+intent,contact_customer_service,unigram,support,381
+intent,contact_customer_service,unigram,service,343
+intent,contact_customer_service,unigram,help,303
+intent,contact_customer_service,unigram,assistance,299
+intent,contact_customer_service,unigram,hours,263
+intent,contact_customer_service,bigram,i can,375
+intent,contact_customer_service,bigram,customer support,366
+intent,contact_customer_service,bigram,customer service,326
+intent,contact_customer_service,bigram,what hours,253
+intent,contact_customer_service,bigram,customer assistance,237
+intent,contact_customer_service,bigram,hours i,207
+intent,contact_customer_service,bigram,what time,191
+intent,contact_customer_service,bigram,call customer,187
+intent,contact_customer_service,bigram,at what,185
+intent,contact_customer_service,bigram,with customer,170
+intent,contact_customer_service,trigram,hours i can,203
+intent,contact_customer_service,trigram,what hours i,201
+intent,contact_customer_service,trigram,at what time,184
+intent,contact_customer_service,trigram,what time i,149
+intent,contact_customer_service,trigram,time i can,148
+intent,contact_customer_service,trigram,i can call,132
+intent,contact_customer_service,trigram,can call customer,129
+intent,contact_customer_service,trigram,i can reach,120
+intent,contact_customer_service,trigram,can reach customer,115
+intent,contact_customer_service,trigram,see what hours,94
+intent,contact_human_agent,unigram,to,1012
+intent,contact_human_agent,unigram,i,781
+intent,contact_human_agent,unigram,with,491
+intent,contact_human_agent,unigram,a,396
+intent,contact_human_agent,unigram,agent,351
+intent,contact_human_agent,unigram,an,334
+intent,contact_human_agent,unigram,do,309
+intent,contact_human_agent,unigram,speak,269
+intent,contact_human_agent,unigram,help,239
+intent,contact_human_agent,unigram,talk,227
+intent,contact_human_agent,bigram,with a,196
+intent,contact_human_agent,bigram,to speak,192
+intent,contact_human_agent,bigram,with an,172
+intent,contact_human_agent,bigram,i need,161
+intent,contact_human_agent,bigram,speak with,152
+intent,contact_human_agent,bigram,to talk,152
+intent,contact_human_agent,bigram,to do,147
+intent,contact_human_agent,bigram,do to,145
+intent,contact_human_agent,bigram,chat with,131
+intent,contact_human_agent,bigram,talk to,122
+intent,contact_human_agent,trigram,to do to,145
+intent,contact_human_agent,trigram,to speak with,112
+intent,contact_human_agent,trigram,a live agent,99
+intent,contact_human_agent,trigram,a human agent,98
+intent,contact_human_agent,trigram,i do not,97
+intent,contact_human_agent,trigram,to chat with,92
+intent,contact_human_agent,trigram,to talk to,81
+intent,contact_human_agent,trigram,do not know,81
+intent,contact_human_agent,trigram,to speak to,79
+intent,contact_human_agent,trigram,i need to,77
+intent,create_account,unigram,account,1345
+intent,create_account,unigram,a,669
+intent,create_account,unigram,i,568
+intent,create_account,unigram,to,333
+intent,create_account,unigram,create,307
+intent,create_account,unigram,for,304
+intent,create_account,unigram,type,267
+intent,create_account,unigram,open,263
+intent,create_account,unigram,category,217
+intent,create_account,unigram,my,202
+intent,create_account,bigram,a account,291
+intent,create_account,bigram,account type,267
+intent,create_account,bigram,account for,267
+intent,create_account,bigram,type account,233
+intent,create_account,bigram,create a,226
+intent,create_account,bigram,account category,217
+intent,create_account,bigram,open a,201
+intent,create_account,bigram,category account,190
+intent,create_account,bigram,for my,179
+intent,create_account,bigram,to create,150
+intent,create_account,trigram,account type account,233
+intent,create_account,trigram,account category account,190
+intent,create_account,trigram,account for my,169
+intent,create_account,trigram,a account type,159
+intent,create_account,trigram,to create a,141
+intent,create_account,trigram,a account category,132
+intent,create_account,trigram,to open a,105
+intent,create_account,trigram,create a account,105
+intent,create_account,trigram,open a account,88
+intent,create_account,trigram,a standard account,79
+intent,delete_account,unigram,account,1407
+intent,delete_account,unigram,i,780
+intent,delete_account,unigram,to,522
+intent,delete_account,unigram,the,346
+intent,delete_account,unigram,do,330
+intent,delete_account,unigram,my,323
+intent,delete_account,unigram,a,309
+intent,delete_account,unigram,type,286
+intent,delete_account,unigram,category,204
+intent,delete_account,unigram,about,192
+intent,delete_account,bigram,account type,286
+intent,delete_account,bigram,type account,271
+intent,delete_account,bigram,account category,204
+intent,delete_account,bigram,category account,183
+intent,delete_account,bigram,to do,175
+intent,delete_account,bigram,do to,174
+intent,delete_account,bigram,my account,159
+intent,delete_account,bigram,i have,148
+intent,delete_account,bigram,information about,139
+intent,delete_account,bigram,know what,134
+intent,delete_account,trigram,account type account,271
+intent,delete_account,trigram,account category account,183
+intent,delete_account,trigram,to do to,174
+intent,delete_account,trigram,i do not,108
+intent,delete_account,trigram,know what i,93
+intent,delete_account,trigram,my account type,92
+intent,delete_account,trigram,do not know,84
+intent,delete_account,trigram,i have to,83
+intent,delete_account,trigram,information about the,75
+intent,delete_account,trigram,have to do,74
+intent,delivery_options,unigram,i,679
+intent,delivery_options,unigram,to,652
+intent,delivery_options,unigram,delivery,629
+intent,delivery_options,unigram,what,387
+intent,delivery_options,unigram,methods,304
+intent,delivery_options,unigram,options,272
+intent,delivery_options,unigram,can,253
+intent,delivery_options,unigram,see,237
+intent,delivery_options,unigram,city,234
+intent,delivery_options,unigram,the,216
+intent,delivery_options,bigram,delivery city,234
+intent,delivery_options,bigram,from delivery,213
+intent,delivery_options,bigram,to delivery,182
+intent,delivery_options,bigram,order from,180
+intent,delivery_options,bigram,to see,177
+intent,delivery_options,bigram,delivery country,177
+intent,delivery_options,bigram,i have,172
+intent,delivery_options,bigram,see what,156
+intent,delivery_options,bigram,to check,145
+intent,delivery_options,bigram,can i,137
+intent,delivery_options,trigram,order from delivery,180
+intent,delivery_options,trigram,from delivery city,121
+intent,delivery_options,trigram,to see what,111
+intent,delivery_options,trigram,to delivery city,108
+intent,delivery_options,trigram,is it possible,107
+intent,delivery_options,trigram,it possible to,99
+intent,delivery_options,trigram,from delivery country,92
+intent,delivery_options,trigram,to check what,90
+intent,delivery_options,trigram,place an order,87
+intent,delivery_options,trigram,an order from,82
+intent,delivery_period,unigram,i,1021
+intent,delivery_period,unigram,to,813
+intent,delivery_period,unigram,how,732
+intent,delivery_period,unigram,my,629
+intent,delivery_period,unigram,can,550
+intent,delivery_period,unigram,arrive,482
+intent,delivery_period,unigram,see,391
+intent,delivery_period,unigram,soon,363
+intent,delivery_period,unigram,expect,361
+intent,delivery_period,unigram,the,327
+intent,delivery_period,bigram,can i,463
+intent,delivery_period,bigram,i expect,361
+intent,delivery_period,bigram,soon can,359
+intent,delivery_period,bigram,how soon,356
+intent,delivery_period,bigram,to see,278
+intent,delivery_period,bigram,to arrive,266
+intent,delivery_period,bigram,see how,238
+intent,delivery_period,bigram,how long,220
+intent,delivery_period,bigram,to check,209
+intent,delivery_period,bigram,expect my,205
+intent,delivery_period,trigram,soon can i,358
+intent,delivery_period,trigram,can i expect,356
+intent,delivery_period,trigram,how soon can,352
+intent,delivery_period,trigram,i expect my,205
+intent,delivery_period,trigram,to see how,165
+intent,delivery_period,trigram,how long it,154
+intent,delivery_period,trigram,i expect the,153
+intent,delivery_period,trigram,when will my,152
+intent,delivery_period,trigram,long it takes,147
+intent,delivery_period,trigram,it takes for,146
+intent,edit_account,unigram,account,1124
+intent,edit_account,unigram,on,738
+intent,edit_account,unigram,my,205
+intent,edit_account,unigram,info,205
+intent,edit_account,unigram,i,202
+intent,edit_account,unigram,to,199
+intent,edit_account,unigram,details,199
+intent,edit_account,unigram,data,195
+intent,edit_account,unigram,type,190
+intent,edit_account,unigram,category,183
+intent,edit_account,bigram,on account,310
+intent,edit_account,bigram,account type,190
+intent,edit_account,bigram,account category,183
+intent,edit_account,bigram,type account,172
+intent,edit_account,bigram,category account,169
+intent,edit_account,bigram,info on,168
+intent,edit_account,bigram,data on,166
+intent,edit_account,bigram,details on,159
+intent,edit_account,bigram,information on,151
+intent,edit_account,bigram,on my,117
+intent,edit_account,trigram,account type account,172
+intent,edit_account,trigram,account category account,169
+intent,edit_account,trigram,on account type,157
+intent,edit_account,trigram,on account category,151
+intent,edit_account,trigram,data on account,78
+intent,edit_account,trigram,info on account,73
+intent,edit_account,trigram,details on account,69
+intent,edit_account,trigram,on my user,67
+intent,edit_account,trigram,information on account,63
+intent,edit_account,trigram,on standard account,52
+intent,get_invoice,unigram,i,860
+intent,get_invoice,unigram,to,819
+intent,get_invoice,unigram,do,478
+intent,get_invoice,unigram,from,464
+intent,get_invoice,unigram,person,449
+intent,get_invoice,unigram,name,449
+intent,get_invoice,unigram,invoice,378
+intent,get_invoice,unigram,bill,373
+intent,get_invoice,unigram,get,370
+intent,get_invoice,unigram,my,356
+intent,get_invoice,bigram,person name,449
+intent,get_invoice,bigram,from person,440
+intent,get_invoice,bigram,to download,268
+intent,get_invoice,bigram,to do,248
+intent,get_invoice,bigram,to get,243
+intent,get_invoice,bigram,do to,241
+intent,get_invoice,bigram,know what,195
+intent,get_invoice,bigram,i need,163
+intent,get_invoice,bigram,i do,154
+intent,get_invoice,bigram,i have,151
+intent,get_invoice,trigram,from person name,440
+intent,get_invoice,trigram,to do to,240
+intent,get_invoice,trigram,know what i,140
+intent,get_invoice,trigram,i do not,132
+intent,get_invoice,trigram,do not know,131
+intent,get_invoice,trigram,bill from person,128
+intent,get_invoice,trigram,do to download,123
+intent,get_invoice,trigram,i have to,117
+intent,get_invoice,trigram,to get my,116
+intent,get_invoice,trigram,do to get,110
+intent,get_refund,unigram,i,728
+intent,get_refund,unigram,to,579
+intent,get_refund,unigram,money,542
+intent,get_refund,unigram,of,500
+intent,get_refund,unigram,a,489
+intent,get_refund,unigram,refund,315
+intent,get_refund,unigram,my,302
+intent,get_refund,unigram,help,233
+intent,get_refund,unigram,do,228
+intent,get_refund,unigram,for,217
+intent,get_refund,bigram,my money,283
+intent,get_refund,bigram,of money,249
+intent,get_refund,bigram,of my,244
+intent,get_refund,bigram,refund amount,196
+intent,get_refund,bigram,currency symbol,143
+intent,get_refund,bigram,symbol refund,143
+intent,get_refund,bigram,a rebate,128
+intent,get_refund,bigram,i need,122
+intent,get_refund,bigram,i have,110
+intent,get_refund,bigram,help me,105
+intent,get_refund,trigram,of my money,239
+intent,get_refund,trigram,currency symbol refund,143
+intent,get_refund,trigram,symbol refund amount,143
+intent,get_refund,trigram,refund amount for,89
+intent,get_refund,trigram,to do to,88
+intent,get_refund,trigram,paid currency symbol,88
+intent,get_refund,trigram,to ask for,73
+intent,get_refund,trigram,i do not,72
+intent,get_refund,trigram,do not know,70
+intent,get_refund,trigram,to get a,62
+intent,newsletter_subscription,unigram,to,1060
+intent,newsletter_subscription,unigram,newsletter,940
+intent,newsletter_subscription,unigram,i,635
+intent,newsletter_subscription,unigram,the,528
+intent,newsletter_subscription,unigram,help,301
+intent,newsletter_subscription,unigram,your,287
+intent,newsletter_subscription,unigram,subscription,284
+intent,newsletter_subscription,unigram,company,262
+intent,newsletter_subscription,unigram,corporate,235
+intent,newsletter_subscription,unigram,me,212
+intent,newsletter_subscription,bigram,to the,250
+intent,newsletter_subscription,bigram,company newsletter,247
+intent,newsletter_subscription,bigram,corporate newsletter,223
+intent,newsletter_subscription,bigram,to your,189
+intent,newsletter_subscription,bigram,the newsletter,183
+intent,newsletter_subscription,bigram,up to,152
+intent,newsletter_subscription,bigram,help me,149
+intent,newsletter_subscription,bigram,subscription to,139
+intent,newsletter_subscription,bigram,newsletter subscription,139
+intent,newsletter_subscription,bigram,your newsletter,133
+intent,newsletter_subscription,trigram,sign up to,127
+intent,newsletter_subscription,trigram,the corporate newsletter,108
+intent,newsletter_subscription,trigram,the company newsletter,106
+intent,newsletter_subscription,trigram,to the newsletter,106
+intent,newsletter_subscription,trigram,to your newsletter,92
+intent,newsletter_subscription,trigram,to sign up,83
+intent,newsletter_subscription,trigram,up to the,82
+intent,newsletter_subscription,trigram,my subscription to,73
+intent,newsletter_subscription,trigram,your company newsletter,66
+intent,newsletter_subscription,trigram,to the company,63
+intent,payment_issue,unigram,with,774
+intent,payment_issue,unigram,i,648
+intent,payment_issue,unigram,payment,622
+intent,payment_issue,unigram,to,560
+intent,payment_issue,unigram,of,551
+intent,payment_issue,unigram,payments,350
+intent,payment_issue,unigram,online,346
+intent,payment_issue,unigram,help,315
+intent,payment_issue,unigram,a,290
+intent,payment_issue,unigram,report,242
+intent,payment_issue,bigram,with online,340
+intent,payment_issue,bigram,with payment,231
+intent,payment_issue,bigram,inform of,224
+intent,payment_issue,bigram,notify of,203
+intent,payment_issue,bigram,with payments,187
+intent,payment_issue,bigram,online payment,185
+intent,payment_issue,bigram,to inform,155
+intent,payment_issue,bigram,to report,154
+intent,payment_issue,bigram,of a,148
+intent,payment_issue,bigram,online payments,148
+intent,payment_issue,trigram,with online payment,182
+intent,payment_issue,trigram,to inform of,154
+intent,payment_issue,trigram,with online payments,146
+intent,payment_issue,trigram,to notify of,137
+intent,payment_issue,trigram,a trouble with,84
+intent,payment_issue,trigram,an error with,83
+intent,payment_issue,trigram,a problem with,72
+intent,payment_issue,trigram,an issue with,68
+intent,payment_issue,trigram,inform of a,61
+intent,payment_issue,trigram,of problems with,61
+intent,place_order,unigram,i,796
+intent,place_order,unigram,to,715
+intent,place_order,unigram,of,416
+intent,place_order,unigram,do,348
+intent,place_order,unigram,some,322
+intent,place_order,unigram,several,295
+intent,place_order,unigram,help,273
+intent,place_order,unigram,your,272
+intent,place_order,unigram,article,216
+intent,place_order,unigram,a,214
+intent,place_order,bigram,of your,270
+intent,place_order,bigram,i need,167
+intent,place_order,bigram,several of,144
+intent,place_order,bigram,to do,140
+intent,place_order,bigram,some of,139
+intent,place_order,bigram,of ur,135
+intent,place_order,bigram,few of,128
+intent,place_order,bigram,do to,127
+intent,place_order,bigram,a few,125
+intent,place_order,bigram,i do,117
+intent,place_order,trigram,to do to,127
+intent,place_order,trigram,a few of,122
+intent,place_order,trigram,of your article,102
+intent,place_order,trigram,several of your,95
+intent,place_order,trigram,some of your,89
+intent,place_order,trigram,of your product,87
+intent,place_order,trigram,few of your,84
+intent,place_order,trigram,i do not,82
+intent,place_order,trigram,do not know,80
+intent,place_order,trigram,i need to,80
+intent,recover_password,unigram,my,889
+intent,recover_password,unigram,i,723
+intent,recover_password,unigram,to,545
+intent,recover_password,unigram,user,411
+intent,recover_password,unigram,the,396
+intent,recover_password,unigram,of,360
+intent,recover_password,unigram,pin,350
+intent,recover_password,unigram,account,309
+intent,recover_password,unigram,key,305
+intent,recover_password,unigram,profile,276
+intent,recover_password,bigram,my user,394
+intent,recover_password,bigram,of my,353
+intent,recover_password,bigram,my account,163
+intent,recover_password,bigram,pin code,161
+intent,recover_password,bigram,my profile,158
+intent,recover_password,bigram,access key,148
+intent,recover_password,bigram,i need,132
+intent,recover_password,bigram,user account,132
+intent,recover_password,bigram,to reset,126
+intent,recover_password,bigram,the pin,122
+intent,recover_password,trigram,of my user,185
+intent,recover_password,trigram,my user account,130
+intent,recover_password,trigram,key of my,112
+intent,recover_password,trigram,my user profile,107
+intent,recover_password,trigram,of my account,85
+intent,recover_password,trigram,of my profile,79
+intent,recover_password,trigram,to do to,73
+intent,recover_password,trigram,pin of my,69
+intent,recover_password,trigram,the pin of,67
+intent,recover_password,trigram,to reset my,62
+intent,registration_problems,unigram,i,735
+intent,registration_problems,unigram,of,615
+intent,registration_problems,unigram,to,577
+intent,registration_problems,unigram,with,548
+intent,registration_problems,unigram,a,523
+intent,registration_problems,unigram,sign-up,330
+intent,registration_problems,unigram,signup,319
+intent,registration_problems,unigram,inform,263
+intent,registration_problems,unigram,notify,241
+intent,registration_problems,unigram,report,234
+intent,registration_problems,bigram,inform of,261
+intent,registration_problems,bigram,notify of,239
+intent,registration_problems,bigram,with a,230
+intent,registration_problems,bigram,to inform,174
+intent,registration_problems,bigram,of a,167
+intent,registration_problems,bigram,to notify,156
+intent,registration_problems,bigram,to report,148
+intent,registration_problems,bigram,a sign-up,138
+intent,registration_problems,bigram,of an,126
+intent,registration_problems,bigram,a signup,121
+intent,registration_problems,trigram,to inform of,172
+intent,registration_problems,trigram,to notify of,154
+intent,registration_problems,trigram,an issue with,96
+intent,registration_problems,trigram,a problem with,87
+intent,registration_problems,trigram,an error with,81
+intent,registration_problems,trigram,inform of a,80
+intent,registration_problems,trigram,with a signup,77
+intent,registration_problems,trigram,with a registration,72
+intent,registration_problems,trigram,with a sign-up,72
+intent,registration_problems,trigram,to do to,68
+intent,review,unigram,a,748
+intent,review,unigram,to,696
+intent,review,unigram,i,612
+intent,review,unigram,feedback,549
+intent,review,unigram,for,475
+intent,review,unigram,about,396
+intent,review,unigram,leave,316
+intent,review,unigram,your,293
+intent,review,unigram,help,249
+intent,review,unigram,do,218
+intent,review,bigram,feedback for,265
+intent,review,bigram,to leave,246
+intent,review,bigram,feedback about,215
+intent,review,bigram,a product,193
+intent,review,bigram,for a,192
+intent,review,bigram,about a,181
+intent,review,bigram,to send,173
+intent,review,bigram,a service,171
+intent,review,bigram,my feedback,164
+intent,review,bigram,for your,161
+intent,review,trigram,feedback for a,109
+intent,review,trigram,for a product,99
+intent,review,trigram,to leave a,98
+intent,review,trigram,about a product,92
+intent,review,trigram,feedback about a,89
+intent,review,trigram,for a service,87
+intent,review,trigram,my feedback for,85
+intent,review,trigram,about a service,84
+intent,review,trigram,feedback for your,78
+intent,review,trigram,some feedback for,77
+intent,set_up_shipping_address,unigram,address,968
+intent,set_up_shipping_address,unigram,i,668
+intent,set_up_shipping_address,unigram,shipping,488
+intent,set_up_shipping_address,unigram,delivery,476
+intent,set_up_shipping_address,unigram,up,467
+intent,set_up_shipping_address,unigram,to,435
+intent,set_up_shipping_address,unigram,a,360
+intent,set_up_shipping_address,unigram,my,299
+intent,set_up_shipping_address,unigram,set,275
+intent,set_up_shipping_address,unigram,the,274
+intent,set_up_shipping_address,bigram,shipping address,478
+intent,set_up_shipping_address,bigram,delivery address,458
+intent,set_up_shipping_address,bigram,address up,210
+intent,set_up_shipping_address,bigram,i have,179
+intent,set_up_shipping_address,bigram,to set,178
+intent,set_up_shipping_address,bigram,set up,139
+intent,set_up_shipping_address,bigram,new shipping,124
+intent,set_up_shipping_address,bigram,new delivery,122
+intent,set_up_shipping_address,bigram,secondary shipping,121
+intent,set_up_shipping_address,bigram,secondary delivery,114
+intent,set_up_shipping_address,trigram,new shipping address,119
+intent,set_up_shipping_address,trigram,new delivery address,119
+intent,set_up_shipping_address,trigram,secondary shipping address,118
+intent,set_up_shipping_address,trigram,secondary delivery address,110
+intent,set_up_shipping_address,trigram,shipping address up,105
+intent,set_up_shipping_address,trigram,delivery address up,97
+intent,set_up_shipping_address,trigram,to set up,87
+intent,set_up_shipping_address,trigram,my shipping address,55
+intent,set_up_shipping_address,trigram,the shipping address,49
+intent,set_up_shipping_address,trigram,set up my,46
+intent,switch_account,unigram,to,1192
+intent,switch_account,unigram,account,1188
+intent,switch_account,unigram,the,846
+intent,switch_account,unigram,i,651
+intent,switch_account,unigram,use,298
+intent,switch_account,unigram,do,295
+intent,switch_account,unigram,change,292
+intent,switch_account,unigram,type,268
+intent,switch_account,unigram,help,255
+intent,switch_account,unigram,profile,239
+intent,switch_account,bigram,to the,481
+intent,switch_account,bigram,the account,392
+intent,switch_account,bigram,change to,287
+intent,switch_account,bigram,use the,269
+intent,switch_account,bigram,account type,268
+intent,switch_account,bigram,account category,218
+intent,switch_account,bigram,type account,193
+intent,switch_account,bigram,to change,189
+intent,switch_account,bigram,to use,174
+intent,switch_account,bigram,switch to,167
+intent,switch_account,trigram,change to the,261
+intent,switch_account,trigram,to the account,231
+intent,switch_account,trigram,the account type,217
+intent,switch_account,trigram,account type account,193
+intent,switch_account,trigram,to change to,184
+intent,switch_account,trigram,the account category,175
+intent,switch_account,trigram,to use the,171
+intent,switch_account,trigram,account category account,157
+intent,switch_account,trigram,switch to the,137
+intent,switch_account,trigram,to do to,127
+intent,track_order,unigram,order,1501
+intent,track_order,unigram,number,969
+intent,track_order,unigram,the,547
+intent,track_order,unigram,i,494
+intent,track_order,unigram,of,492
+intent,track_order,unigram,status,489
+intent,track_order,unigram,purchase,420
+intent,track_order,unigram,to,414
+intent,track_order,unigram,see,333
+intent,track_order,unigram,eta,319
+intent,track_order,bigram,order number,969
+intent,track_order,bigram,order order,518
+intent,track_order,bigram,purchase order,417
+intent,track_order,bigram,eta of,312
+intent,track_order,bigram,the eta,259
+intent,track_order,bigram,current status,197
+intent,track_order,bigram,see the,196
+intent,track_order,bigram,of order,192
+intent,track_order,bigram,to see,176
+intent,track_order,bigram,status of,163
+intent,track_order,trigram,order order number,518
+intent,track_order,trigram,purchase order number,417
+intent,track_order,trigram,the eta of,256
+intent,track_order,trigram,of order order,189
+intent,track_order,trigram,order number status,158
+intent,track_order,trigram,of purchase order,153
+intent,track_order,trigram,order number current,136
+intent,track_order,trigram,number current status,134
+intent,track_order,trigram,eta of the,122
+intent,track_order,trigram,see the eta,118
+intent,track_refund,unigram,i,705
+intent,track_refund,unigram,refund,634
+intent,track_refund,unigram,of,553
+intent,track_refund,unigram,amount,428
+intent,track_refund,unigram,the,385
+intent,track_refund,unigram,a,374
+intent,track_refund,unigram,to,315
+intent,track_refund,unigram,status,303
+intent,track_refund,unigram,my,290
+intent,track_refund,unigram,currency,229
+intent,track_refund,bigram,refund amount,428
+intent,track_refund,bigram,currency symbol,229
+intent,track_refund,bigram,symbol refund,229
+intent,track_refund,bigram,of currency,220
+intent,track_refund,bigram,waiting for,210
+intent,track_refund,bigram,of refund,200
+intent,track_refund,bigram,if there,199
+intent,track_refund,bigram,i expect,194
+intent,track_refund,bigram,for a,183
+intent,track_refund,bigram,amount dollars,174
+intent,track_refund,trigram,currency symbol refund,229
+intent,track_refund,trigram,symbol refund amount,229
+intent,track_refund,trigram,of currency symbol,220
+intent,track_refund,trigram,of refund amount,196
+intent,track_refund,trigram,waiting for a,181
+intent,track_refund,trigram,refund amount dollars,174
+intent,track_refund,trigram,i expect a,163
+intent,track_refund,trigram,if there are,119
+intent,track_refund,trigram,there are any,118
+intent,track_refund,trigram,i am waiting,106
