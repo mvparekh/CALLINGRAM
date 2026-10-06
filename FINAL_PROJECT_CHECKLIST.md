@@ -72,7 +72,6 @@ Each item is strictly audited against actual code execution and test verificatio
 ### 10. Deployment
 - [x] **requirements.txt**: Fully verified with exact dependencies
 - [x] **runtime.txt**: Configured with `python-3.12`
-- [x] **GitHub-ready**: Local Git repository initialized, configured, and committed
+- [x] **GitHub Repository Configured & Pushed**: Verified live on `https://github.com/mvparekh/CALLINGRAM` on branch `main`
 - [x] **Streamlit Community Cloud-ready**: App entry point `app.py` validated and tested locally
-- [ ] **Deployed to Public Cloud**: Requires user to push to their personal GitHub account and click deploy on Streamlit Cloud
-- [ ] **Public URL verified**: Awaiting user deployment trigger
+- [ ] **Live Public URL**: Requires 1-click authorization on share.streamlit.io (Select repository `mvparekh/CALLINGRAM`, file `app.py`, click Deploy)
