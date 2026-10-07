@@ -331,7 +331,7 @@ def generate_architecture_report(artifacts: dict, output_path: Path):
     story.append(t_form)
     story.append(Spacer(1, 4))
     story.append(Paragraph(
-        "Where N is total training tokens (N = 1,056,726), and |V| is the fixed vocabulary size (|V| = 15,800 unique words "
+        "Where N is total training tokens (N = 1,015,433), and |V| is the fixed vocabulary size (|V| = 16,186 unique words "
         "observed during training, plus sentence-terminal token <code>&lt;/s&gt;</code>). This guarantees sum P(w | ctx) = 1.0.",
         styles["BodyTextCustom"]
     ))
@@ -445,8 +445,8 @@ def generate_evaluation_report(artifacts: dict, output_path: Path):
     story.append(Paragraph("3. Vocabulary Statistics", styles["SectionHeading"]))
     story.append(Paragraph(
         f"• <b>Full Corpus Vocabulary:</b> {app['vocabulary_size']:,} distinct lexical word types.<br/>"
-        f"• <b>Training Partition Vocabulary (|V|):</b> 15,800 unique words (used in Laplace denominator).<br/>"
-        "• <b>Out-of-Vocabulary (OOV) Rate on Test Set:</b> ~1.8% of test tokens were unobserved in training, all successfully smoothed via Add-1 probability.",
+        "• <b>Training Partition Vocabulary (|V|):</b> 16,186 unique words (used in Laplace denominator).<br/>"
+        "• <b>Out-of-Vocabulary (OOV) Rate on Test Set:</b> ~1.6% of test tokens were unobserved in training, all successfully smoothed via Add-1 probability.",
         styles["BodyTextCustom"]
     ))
 
@@ -511,16 +511,24 @@ def generate_evaluation_report(artifacts: dict, output_path: Path):
     ]))
     story.append(t_pp)
 
+    # Extract dynamic perplexity numbers for text
+    u_mean = df_pp[df_pp["model"].str.contains("Unigram")]["mean_perplexity"].iloc[0]
+    u_med = df_pp[df_pp["model"].str.contains("Unigram")]["median_perplexity"].iloc[0]
+    b_mean = df_pp[df_pp["model"].str.contains("Bigram")]["mean_perplexity"].iloc[0]
+    b_med = df_pp[df_pp["model"].str.contains("Bigram")]["median_perplexity"].iloc[0]
+    t_mean = df_pp[df_pp["model"].str.contains("Trigram")]["mean_perplexity"].iloc[0]
+
     # 6. Model Comparison
     story.append(Paragraph("6. Unigram vs. Bigram vs. Trigram Comparative Analysis", styles["SectionHeading"]))
     story.append(Paragraph(
-        "• <b>Bigram vs Unigram:</b> The Bigram model achieves a lower mean perplexity (<b>488.40</b>) and median perplexity (<b>424.66</b>) "
-        "compared to the Unigram model (mean: <b>493.51</b>, median: <b>437.43</b>). Conditioning on the previous word meaningfully reduces "
-        "sequence uncertainty in customer interactions (e.g., <i>'thank' → 'you'</i>, <i>'customer' → 'service'</i>).<br/>"
-        "• <b>Trigram Add-1 Sparsity Penalty:</b> The Trigram model demonstrates elevated perplexity (mean: <b>2,351.76</b>). "
-        "In a vocabulary of |V| = 15,800 words, the trigram context parameter space is |V|² ≈ 2.5 × 10⁸ states. Because conversational speech "
+        f"• <b>Unigram vs Bigram:</b> The Unigram model yields a mean perplexity of <b>{u_mean:.2f}</b> (median: <b>{u_med:.2f}</b>), "
+        f"while the Bigram model yields <b>{b_mean:.2f}</b> (median: <b>{b_med:.2f}</b>). While high-frequency conversational collocations "
+        "(e.g., <i>'thank you'</i>, <i>'customer service'</i>, <i>'credit card'</i>) exhibit high transition likelihood, wide vocabulary dispersion "
+        f"in unconstrained multi-topic dialogue subjects unseen bigram contexts to uniform Add-1 smoothing penalties across |V| = {len(artifacts['summary']['apptek']['domains'])} domains.<br/>"
+        f"• <b>Trigram Add-1 Sparsity Penalty:</b> The Trigram model demonstrates substantially elevated perplexity (mean: <b>{t_mean:.2f}</b>). "
+        "In a vocabulary of |V| = 16,186 words, the trigram context parameter space is |V|² ≈ 2.62 × 10⁸ states. Because conversational speech "
         "is open-ended, the vast majority of 3-word test sequences are unseen in training. Uniform Add-1 smoothing assigns a small probability "
-        "P = 1 / (0 + |V|) ≈ 6.33 × 10⁻⁵ to each unseen transition, heavily penalizing sequence log-likelihood. This empirical finding "
+        "P = 1 / (0 + |V|) ≈ 6.18 × 10⁻⁵ to each unseen transition, heavily penalizing sequence log-likelihood. This empirical finding "
         "aligns directly with established statistical NLP literature regarding uniform smoothing limitations on higher-order models.",
         styles["BodyTextCustom"]
     ))

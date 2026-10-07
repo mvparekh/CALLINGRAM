@@ -1,10 +1,11 @@
 """
 CALLNGRAM N-Gram Language Models
 Implements Unigram, Bigram, and Trigram language models with:
-- Frequency distributions
+- Maximum Likelihood Estimation (MLE)
 - Laplace (Add-1) smoothing
 - Probability estimation
 - Perplexity computation
+- Frequency distributions
 """
 
 import math
@@ -16,7 +17,8 @@ import pandas as pd
 class NGramLanguageModel:
     """
     Unified N-gram Language Model supporting n=1 (unigram), n=2 (bigram), n=3 (trigram).
-    Implements Laplace / Add-1 smoothing and perplexity calculation.
+    Supports both unsmoothed MLE and Laplace (Add-1) smoothed probability estimation,
+    along with transcript perplexity calculation.
     """
 
     def __init__(self, n: int = 1):
@@ -68,20 +70,46 @@ class NGramLanguageModel:
                     self.ngram_counts[ngram] += 1
 
         self.vocabulary = vocab_override if vocab_override is not None else vocab
-        # Include </s> in effective target vocabulary size
+        # Include </s> in effective target vocabulary size (|V| + 1)
         self.vocab_size = max(len(self.vocabulary) + 1, 1)
         self.total_tokens = total_toks
         return self
 
-    def probability(self, word: str, context: Optional[Any] = None) -> float:
+    def probability(self, word: str, context: Optional[Any] = None, smoothed: bool = True) -> float:
         """
-        Calculates Laplace (Add-1) smoothed probability: P(word | context).
-        - Unigram: P(w) = (count(w) + 1) / (total_tokens + V)
-        - Bigram/Trigram: P(w | ctx) = (count(ctx, w) + 1) / (count(ctx) + V)
-        where V is the vocabulary size.
+        Calculates N-gram probability P(word | context).
+
+        If smoothed=True (default), computes Laplace (Add-1) smoothed probability:
+          - Unigram: P(w) = (count(w) + 1) / (N + V)
+          - Bigram/Trigram: P(w | ctx) = (count(ctx, w) + 1) / (count(ctx) + V)
+        where V is the fixed effective vocabulary size.
+
+        If smoothed=False, computes Maximum Likelihood Estimation (MLE):
+          - Unigram: P(w) = count(w) / N
+          - Bigram/Trigram: P(w | ctx) = count(ctx, w) / count(ctx) if count(ctx) > 0 else 0.0
         """
         v = self.vocab_size
 
+        if not smoothed:
+            # Unsmoothed Maximum Likelihood Estimation
+            if self.n == 1:
+                if self.total_tokens == 0:
+                    return 0.0
+                return self.ngram_counts.get(word, 0) / float(self.total_tokens)
+            elif self.n == 2:
+                ctx = context
+                c_ctx = self.context_counts.get(ctx, 0)
+                if c_ctx == 0:
+                    return 0.0
+                return self.ngram_counts.get((ctx, word), 0) / float(c_ctx)
+            elif self.n == 3:
+                ctx = context
+                c_ctx = self.context_counts.get(ctx, 0)
+                if c_ctx == 0:
+                    return 0.0
+                return self.ngram_counts.get((ctx[0], ctx[1], word), 0) / float(c_ctx)
+
+        # Laplace (Add-1) Smoothing
         if self.n == 1:
             c_w = self.ngram_counts.get(word, 0)
             return (c_w + 1.0) / (self.total_tokens + v)
@@ -102,6 +130,10 @@ class NGramLanguageModel:
 
         return 1.0 / v
 
+    def mle_probability(self, word: str, context: Optional[Any] = None) -> float:
+        """Convenience method for unsmoothed Maximum Likelihood Estimation."""
+        return self.probability(word, context=context, smoothed=False)
+
     def score_sentence(self, sentence_tokens: List[str]) -> Tuple[float, int]:
         """
         Calculates the log probability sum and evaluated token count for a sentence.
@@ -115,7 +147,7 @@ class NGramLanguageModel:
 
         if self.n == 1:
             for tok in sentence_tokens:
-                prob = self.probability(tok)
+                prob = self.probability(tok, smoothed=True)
                 log_prob_sum += math.log(prob)
                 evaluated_count += 1
 
@@ -123,7 +155,7 @@ class NGramLanguageModel:
             for i in range(1, len(sentence_tokens)):
                 ctx = sentence_tokens[i - 1]
                 target = sentence_tokens[i]
-                prob = self.probability(target, context=ctx)
+                prob = self.probability(target, context=ctx, smoothed=True)
                 log_prob_sum += math.log(prob)
                 evaluated_count += 1
 
@@ -131,7 +163,7 @@ class NGramLanguageModel:
             for i in range(2, len(sentence_tokens)):
                 ctx = (sentence_tokens[i - 2], sentence_tokens[i - 1])
                 target = sentence_tokens[i]
-                prob = self.probability(target, context=ctx)
+                prob = self.probability(target, context=ctx, smoothed=True)
                 log_prob_sum += math.log(prob)
                 evaluated_count += 1
 
@@ -174,15 +206,15 @@ class NGramLanguageModel:
                 if isinstance(ngram, tuple) and any(tok in ("<s>", "</s>") for tok in ngram):
                     continue
 
-            # Calculate probability
+            # Calculate Laplace smoothed probability
             if self.n == 1:
-                prob = self.probability(ngram)
+                prob = self.probability(ngram, smoothed=True)
                 phrase = ngram
             elif self.n == 2:
-                prob = self.probability(ngram[1], context=ngram[0])
+                prob = self.probability(ngram[1], context=ngram[0], smoothed=True)
                 phrase = f"{ngram[0]} {ngram[1]}"
             elif self.n == 3:
-                prob = self.probability(ngram[2], context=(ngram[0], ngram[1]))
+                prob = self.probability(ngram[2], context=(ngram[0], ngram[1]), smoothed=True)
                 phrase = f"{ngram[0]} {ngram[1]} {ngram[2]}"
 
             items.append((phrase, count, prob))
