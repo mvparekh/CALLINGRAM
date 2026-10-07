@@ -91,30 +91,62 @@ class TestCALLNGRAM(unittest.TestCase):
     # ----------------------------------------------------
     # TEST 3 — Laplace (Add-1) Smoothing
     # ----------------------------------------------------
+    # ----------------------------------------------------
+    # TEST 3 — Laplace (Add-1) Smoothing & Probability Estimation
+    # ----------------------------------------------------
     def test_03_smoothing(self):
-        sentences = [["<s>", "order", "status", "</s>"]]
+        sentences = [
+            ["<s>", "thank", "you", "for", "calling", "</s>"],
+            ["<s>", "thank", "you", "so", "much", "</s>"],
+            ["<s>", "order", "status", "check", "</s>"]
+        ]
         m1 = NGramLanguageModel(n=1).fit(sentences)
         m2 = NGramLanguageModel(n=2).fit(sentences)
         m3 = NGramLanguageModel(n=3).fit(sentences)
 
-        # Seen probability > 0
-        p_seen_1 = m1.probability("order")
-        p_seen_2 = m2.probability("status", context="order")
-        p_seen_3 = m3.probability("status", context=("<s>", "order"))
-        self.assertGreater(p_seen_1, 0.0)
-        self.assertGreater(p_seen_2, 0.0)
-        self.assertGreater(p_seen_3, 0.0)
+        # 1. Seen Bigram probability P(you | thank)
+        p_seen_b_smooth = m2.probability("you", context="thank", smoothed=True)
+        p_seen_b_mle = m2.mle_probability("you", context="thank")
+        self.assertGreater(p_seen_b_smooth, 0.0)
+        self.assertGreater(p_seen_b_mle, 0.0)
+        self.assertEqual(p_seen_b_mle, 1.0)  # All 'thank' tokens were followed by 'you'
 
-        # Unseen probability > 0 (guaranteed non-zero by Add-1)
-        p_unseen_1 = m1.probability("unseenwordxyz")
-        p_unseen_2 = m2.probability("refund", context="order")
-        p_unseen_3 = m3.probability("refund", context=("flight", "ticket"))
-        self.assertGreater(p_unseen_1, 0.0)
-        self.assertGreater(p_unseen_2, 0.0)
-        self.assertGreater(p_unseen_3, 0.0)
+        # 2. Seen Trigram probability P(for | thank, you)
+        p_seen_t_str = m3.probability("for", context="thank you", smoothed=True)
+        p_seen_t_tup = m3.probability("for", context=("thank", "you"), smoothed=True)
+        p_seen_t_list = m3.probability("for", context=["thank", "you"], smoothed=True)
+        p_seen_t_mle = m3.mle_probability("for", context="thank you")
+
+        self.assertGreater(p_seen_t_str, 0.0)
+        self.assertEqual(p_seen_t_str, p_seen_t_tup)
+        self.assertEqual(p_seen_t_str, p_seen_t_list)
+        self.assertAlmostEqual(p_seen_t_mle, 0.5, places=4)  # 1 'for' out of 2 'thank you'
+
+        # 3. Unseen Bigram & Trigram probabilities under Add-1 smoothing (> 0)
+        p_unseen_b = m2.probability("banana", context="thank", smoothed=True)
+        p_unseen_t = m3.probability("banana", context="thank you", smoothed=True)
+        self.assertGreater(p_unseen_b, 0.0)
+        self.assertGreater(p_unseen_t, 0.0)
+
+        # 4. Unseen under MLE returns 0.0
+        p_unseen_b_mle = m2.mle_probability("banana", context="thank")
+        p_unseen_t_mle = m3.mle_probability("banana", context="thank you")
+        self.assertEqual(p_unseen_b_mle, 0.0)
+        self.assertEqual(p_unseen_t_mle, 0.0)
+
+        # 5. Transitions lookup
+        trans_b = m2.get_transitions("thank")
+        self.assertTrue(len(trans_b) > 0)
+        self.assertEqual(trans_b[0]["next_word"], "you")
+
+        trans_t = m3.get_transitions("thank you")
+        self.assertTrue(len(trans_t) >= 2)
+        words = [t["next_word"] for t in trans_t]
+        self.assertIn("for", words)
+        self.assertIn("so", words)
 
     # ----------------------------------------------------
-    # TEST 4 — Perplexity
+    # TEST 4 — Perplexity Computation
     # ----------------------------------------------------
     def test_04_perplexity(self):
         train_sents_1 = [["thank", "you", "for", "calling"]]
@@ -125,9 +157,10 @@ class TestCALLNGRAM(unittest.TestCase):
         m2 = NGramLanguageModel(n=2).fit(train_sents_2)
         m3 = NGramLanguageModel(n=3).fit(train_sents_3)
 
-        test_sent_1 = [["thank", "you", "calling"]]
-        test_sent_2 = [["<s>", "thank", "you", "calling", "</s>"]]
-        test_sent_3 = [["<s>", "<s>", "thank", "you", "calling", "</s>"]]
+        # Test sentence containing unobserved word
+        test_sent_1 = [["thank", "you", "unobservedword", "calling"]]
+        test_sent_2 = [["<s>", "thank", "you", "unobservedword", "calling", "</s>"]]
+        test_sent_3 = [["<s>", "<s>", "thank", "you", "unobservedword", "calling", "</s>"]]
 
         pp1 = m1.perplexity(test_sent_1)
         pp2 = m2.perplexity(test_sent_2)
@@ -135,7 +168,8 @@ class TestCALLNGRAM(unittest.TestCase):
 
         for pp, name in [(pp1, "Unigram"), (pp2, "Bigram"), (pp3, "Trigram")]:
             self.assertTrue(math.isfinite(pp), f"{name} perplexity is not finite")
-            self.assertGreater(pp, 0.0, f"{name} perplexity must be positive")
+            self.assertFalse(math.isnan(pp), f"{name} perplexity is NaN")
+            self.assertGreater(pp, 0.0, f"{name} perplexity must be strictly positive")
 
     # ----------------------------------------------------
     # TEST 5 — Train / Test Split Integrity (80/20, seed=42)

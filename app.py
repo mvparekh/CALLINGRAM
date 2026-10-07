@@ -8,12 +8,14 @@ Features:
 - Unigram, Bigram, Trigram models with Laplace (Add-1) smoothing
 - Real-time transcript perplexity evaluation against trained reference models
 - N-gram frequency and probability exploration
-- Customer issue & intent phrase discovery
+- Context Probability Lookup with Bigram & Trigram next-word prediction
+- Customer issue & intent phrase discovery (Category -> Intent -> Top phrases)
 - Academic documentation artifacts (PDF)
 """
 
 import sys
 import json
+import math
 from pathlib import Path
 from typing import List, Tuple, Dict, Any, Optional
 import pandas as pd
@@ -50,9 +52,10 @@ st.set_page_config(
 # Custom Academic Theme & Professional Styling
 st.markdown("""
 <style>
-    /* Main Layout & Typography */
+    /* Main Layout & Base Typography */
     .stApp {
         background-color: #F8FAFC;
+        color: #0F172A;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
     
@@ -99,7 +102,7 @@ st.markdown("""
         font-size: 1.35rem;
         font-weight: 700;
         color: #0F172A;
-        margin-top: 18px;
+        margin-top: 20px;
         margin-bottom: 4px;
         border-bottom: 2px solid #E2E8F0;
         padding-bottom: 6px;
@@ -113,12 +116,11 @@ st.markdown("""
     /* Metric Cards */
     .stat-card {
         background: #FFFFFF;
-        border: 1px solid #E2E8F0;
+        border: 1px solid #CBD5E1;
         border-radius: 8px;
         padding: 16px;
         text-align: center;
         box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
-        transition: transform 0.15s ease;
     }
     .stat-value {
         font-size: 1.85rem;
@@ -128,15 +130,15 @@ st.markdown("""
     }
     .stat-label {
         font-size: 0.8rem;
-        font-weight: 600;
-        color: #64748B;
+        font-weight: 700;
+        color: #475569;
         text-transform: uppercase;
         letter-spacing: 0.05em;
         margin-top: 4px;
     }
     .stat-detail {
         font-size: 0.75rem;
-        color: #94A3B8;
+        color: #64748B;
         margin-top: 2px;
     }
 
@@ -144,9 +146,9 @@ st.markdown("""
     .academic-box {
         background-color: #FFFFFF;
         border-left: 4px solid #1E3A8A;
-        border-right: 1px solid #E2E8F0;
-        border-top: 1px solid #E2E8F0;
-        border-bottom: 1px solid #E2E8F0;
+        border-right: 1px solid #CBD5E1;
+        border-top: 1px solid #CBD5E1;
+        border-bottom: 1px solid #CBD5E1;
         border-radius: 0 8px 8px 0;
         padding: 14px 18px;
         margin: 12px 0;
@@ -154,7 +156,7 @@ st.markdown("""
         color: #1E293B;
     }
 
-    /* Disclaimers & Notes */
+    /* Methodology Notes */
     .viva-note {
         background-color: #FEF3C7;
         border-left: 4px solid #D97706;
@@ -163,6 +165,72 @@ st.markdown("""
         border-radius: 0 6px 6px 0;
         font-size: 0.88rem;
         margin: 12px 0;
+    }
+
+    /* Pipeline Diagram Styling */
+    .pipeline-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        margin: 18px 0 24px 0;
+    }
+    .pipeline-step {
+        background: #FFFFFF;
+        border: 1px solid #CBD5E1;
+        border-left: 5px solid #1E3A8A;
+        border-radius: 8px;
+        padding: 12px 18px;
+        width: 100%;
+        max-width: 840px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+    .pipeline-step-num {
+        background: #1E3A8A;
+        color: #FFFFFF;
+        font-weight: 700;
+        font-size: 0.95rem;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+    .pipeline-step-body {
+        flex-grow: 1;
+    }
+    .pipeline-step-title {
+        color: #0F172A;
+        font-weight: 700;
+        font-size: 1.0rem;
+    }
+    .pipeline-step-desc {
+        color: #475569;
+        font-size: 0.86rem;
+        margin-top: 2px;
+    }
+    .pipeline-arrow {
+        font-size: 1.3rem;
+        color: #2563EB;
+        font-weight: 900;
+        line-height: 1;
+        user-select: none;
+    }
+
+    /* High-contrast Radio and Selectbox Labels */
+    div[data-testid="stRadio"] label {
+        color: #0F172A !important;
+        font-weight: 600 !important;
+        font-size: 0.95rem !important;
+    }
+    div[data-testid="stSelectbox"] label, div[data-testid="stTextInput"] label {
+        color: #0F172A !important;
+        font-weight: 600 !important;
     }
 
     /* Sidebar Clean Styling */
@@ -174,6 +242,7 @@ st.markdown("""
     }
     section[data-testid="stSidebar"] .stRadio label {
         color: #CBD5E1 !important;
+        font-weight: 500 !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -268,7 +337,7 @@ st.sidebar.markdown("""
 """, unsafe_allow_html=True)
 
 nav_choice = st.sidebar.radio(
-    "Modules",
+    "Navigation Modules",
     [
         "Dashboard",
         "Analyze Transcript",
@@ -371,41 +440,76 @@ if nav_choice == "Dashboard":
             """, unsafe_allow_html=True)
 
         st.markdown('<div class="section-title">Language Modeling Pipeline Overview</div>', unsafe_allow_html=True)
-        st.markdown('<div class="section-caption">Mathematical workflow from raw conversational transcripts to perplexity and issue discovery.</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-caption">End-to-end mathematical workflow from conversational speech transcripts to perplexity and issue discovery.</div>', unsafe_allow_html=True)
 
-        p1, p2, p3, p4 = st.columns(4)
-        with p1:
-            st.markdown("""
-            **1. Preprocessing**
-            - Lowercase normalization
-            - Punctuation isolation
-            - Spoken markers (*uh, um, okay*)
-            - Sentence boundary tags `<s>`, `</s>`
-            """)
-        with p2:
-            st.markdown("""
-            **2. N-Gram Estimation**
-            - Unigram: $P(w)$
-            - Bigram: $P(w_i \\mid w_{i-1})$
-            - Trigram: $P(w_i \\mid w_{i-2}, w_{i-1})$
-            - Parameter space: $|V|, |V|^2$
-            """)
-        with p3:
-            st.markdown("""
-            **3. Laplace Smoothing**
-            - $P(w|ctx) = \\frac{C(ctx, w) + 1}{C(ctx) + |V|}$
-            - Zero-frequency avoidance
-            - Guaranteed positive probabilities
-            - Fixed vocabulary $|V| = 16,186$
-            """)
-        with p4:
-            st.markdown("""
-            **4. Perplexity Evaluation**
-            - $PP = \\exp(-\\frac{1}{M}\\sum \\ln P)$
-            - Evaluated on 350 test calls
-            - Reference model scoring
-            - Issue phrase mining (Bitext)
-            """)
+        # Clear, responsive, and robust HTML/CSS pipeline visualization
+        st.markdown("""
+        <div class="pipeline-container">
+            <div class="pipeline-step">
+                <div class="pipeline-step-num">1</div>
+                <div class="pipeline-step-body">
+                    <div class="pipeline-step-title">Raw Call Transcript</div>
+                    <div class="pipeline-step-desc">1,746 AppTek call-center-style dialogue transcripts (873 customer, 873 agent dialogues) across 16 service domains.</div>
+                </div>
+            </div>
+            <div class="pipeline-arrow">&#x2193;</div>
+            <div class="pipeline-step">
+                <div class="pipeline-step-num">2</div>
+                <div class="pipeline-step-body">
+                    <div class="pipeline-step-title">Preprocessing</div>
+                    <div class="pipeline-step-desc">Case lowercasing, bracket normalization, whitespace collapse, and explicit preservation of spoken hesitation markers (<i>uh, um, okay, yeah, mhm</i>).</div>
+                </div>
+            </div>
+            <div class="pipeline-arrow">&#x2193;</div>
+            <div class="pipeline-step">
+                <div class="pipeline-step-num">3</div>
+                <div class="pipeline-step-body">
+                    <div class="pipeline-step-title">Tokenization</div>
+                    <div class="pipeline-step-desc">Sentence segmentation with offline regex fallback, word tokenization, and sentence boundary token injection (<code>&lt;s&gt;</code> and <code>&lt;/s&gt;</code>).</div>
+                </div>
+            </div>
+            <div class="pipeline-arrow">&#x2193;</div>
+            <div class="pipeline-step">
+                <div class="pipeline-step-num">4</div>
+                <div class="pipeline-step-body">
+                    <div class="pipeline-step-title">N-gram Generation</div>
+                    <div class="pipeline-step-desc">Extraction of Unigrams (single words), Bigrams (two-word collocations), and Trigrams (three-word collocations) via sliding windows.</div>
+                </div>
+            </div>
+            <div class="pipeline-arrow">&#x2193;</div>
+            <div class="pipeline-step">
+                <div class="pipeline-step-num">5</div>
+                <div class="pipeline-step-body">
+                    <div class="pipeline-step-title">Laplace Smoothing</div>
+                    <div class="pipeline-step-desc">Application of Add-1 smoothing with fixed training vocabulary |V| = 16,186 (effective |V| = 16,187) to prevent zero-probability crashes on unseen transitions.</div>
+                </div>
+            </div>
+            <div class="pipeline-arrow">&#x2193;</div>
+            <div class="pipeline-step">
+                <div class="pipeline-step-num">6</div>
+                <div class="pipeline-step-body">
+                    <div class="pipeline-step-title">Probability Calculation</div>
+                    <div class="pipeline-step-desc">Estimation of transition probabilities: P(w|context) = (count(context, w) + 1) / (count(context) + |V|) alongside unsmoothed MLE baseline.</div>
+                </div>
+            </div>
+            <div class="pipeline-arrow">&#x2193;</div>
+            <div class="pipeline-step">
+                <div class="pipeline-step-num">7</div>
+                <div class="pipeline-step-body">
+                    <div class="pipeline-step-title">Perplexity</div>
+                    <div class="pipeline-step-desc">Evaluation of intrinsic predictive uncertainty PP(W) = exp(-1/M &Sigma; ln P) across 350 held-out test transcripts against reference models.</div>
+                </div>
+            </div>
+            <div class="pipeline-arrow">&#x2193;</div>
+            <div class="pipeline-step">
+                <div class="pipeline-step-num">8</div>
+                <div class="pipeline-step-body">
+                    <div class="pipeline-step-title">Issue Phrase Analysis</div>
+                    <div class="pipeline-step-desc">Extraction of recurring multi-word collocations across 11 customer support categories and 27 intents in the secondary Bitext corpus.</div>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
         # Model Benchmark Snapshot
         st.markdown('<div class="section-title">Reference Language Model Benchmarks</div>', unsafe_allow_html=True)
@@ -469,7 +573,6 @@ elif nav_choice == "Analyze Transcript":
         chosen_default = sample_2_text
         source_label = "Sample Transcript (Illustrative Technical Support Call)"
     elif "Genuine Held-Out" in sample_choice and test_df is not None and not test_df.empty:
-        # Load real test record 0
         real_rec = test_df.iloc[0]
         chosen_default = str(real_rec["clean_text"])
         source_label = f"Held-Out AppTek Test Dialogue (Domain: {real_rec.get('domain', 'retail')}, Role: {real_rec.get('role', 'customer')})"
@@ -482,91 +585,102 @@ elif nav_choice == "Analyze Transcript":
         try:
             chosen_default = upload_file.read().decode("utf-8")
             source_label = f"Uploaded File: {upload_file.name}"
-            st.success(f"Loaded `{upload_file.name}` ({len(chosen_default)} characters)")
         except Exception as e:
-            st.error(f"Error reading uploaded file: {e}")
+            st.error(f"Error reading file: {e}")
 
-    transcript_input = st.text_area("Transcript Text", value=chosen_default, height=170)
+    user_text = st.text_area(
+        "Transcript Content",
+        value=chosen_default,
+        height=180,
+        placeholder="Please enter or upload a transcript."
+    )
 
-    if st.button("Run Transcript Analysis", type="primary"):
-        if not transcript_input.strip():
-            st.warning("Please enter or select a valid transcript text.")
+    if st.button("🚀 Analyze Transcript & Compute Perplexity", type="primary"):
+        if not user_text.strip():
+            st.warning("Please enter or upload a transcript.")
         else:
-            with st.spinner("Analyzing transcript properties and computing model perplexity..."):
-                cleaned = clean_text_for_tokens(transcript_input)
+            with st.spinner("Tokenizing, scoring sequence, and extracting N-grams..."):
+                cleaned = clean_text_for_tokens(user_text)
                 sentences = segment_sentences(cleaned)
-                sents_toks, all_words = tokenize_transcript(cleaned)
+                all_tokens_nested = [tokenize_sentence(s, lowercase=True) for s in sentences]
+                all_words = [tok for s in all_tokens_nested for tok in s]
+                total_word_count = len(all_words)
 
-                # Discourse markers
-                spoken_found = [w for w in all_words if w in SPOKEN_MARKERS]
-                unique_words = len(set(all_words))
+                # Count spoken markers
+                marker_counts = {m: all_words.count(m) for m in SPOKEN_MARKERS if m in all_words}
+                total_markers = sum(marker_counts.values())
 
-                # Display stats
-                st.markdown('<div class="section-title">1. Transcript Properties</div>', unsafe_allow_html=True)
-                p1, p2, p3, p4 = st.columns(4)
-                with p1:
-                    st.metric("Total Tokens", f"{len(all_words):,}")
-                with p2:
-                    st.metric("Unique Vocabulary", f"{unique_words:,}")
-                with p3:
-                    st.metric("Sentence Count", f"{len(sentences):,}")
-                with p4:
-                    marker_summary = f"{len(spoken_found)} ({', '.join(set(spoken_found)) if spoken_found else 'none'})"
-                    st.metric("Spoken Markers", marker_summary)
+                st.markdown('<div class="section-title">1. Transcript Characteristics</div>', unsafe_allow_html=True)
+                m1, m2, m3, m4 = st.columns(4)
+                with m1:
+                    st.metric("Sentence Count", len(sentences))
+                with m2:
+                    st.metric("Total Tokens", total_word_count)
+                with m3:
+                    st.metric("Unique Words (Vocab)", len(set(all_words)))
+                with m4:
+                    st.metric("Spoken Markers", f"{total_markers} ({total_markers/max(total_word_count,1)*100:.1f}%)")
 
-                # Reference Perplexity Evaluation
-                st.markdown('<div class="section-title">2. Model Perplexity (Evaluated Against AppTek Reference Models)</div>', unsafe_allow_html=True)
-                if m1_ref and m2_ref and m3_ref:
-                    t_eval_1 = [tokenize_sentence(s) for s in sentences if tokenize_sentence(s)]
-                    t_eval_2 = [["<s>"] + tokenize_sentence(s) + ["</s>"] for s in sentences if tokenize_sentence(s)]
-                    t_eval_3 = [["<s>", "<s>"] + tokenize_sentence(s) + ["</s>"] for s in sentences if tokenize_sentence(s)]
+                if marker_counts:
+                    st.caption(f"**Detected Conversational Hesitation Tokens:** {', '.join([f'{k} ({v})' for k, v in marker_counts.items()])}")
 
-                    pp1 = m1_ref.perplexity(t_eval_1)
-                    pp2 = m2_ref.perplexity(t_eval_2)
-                    pp3 = m3_ref.perplexity(t_eval_3)
+                # Perplexity against reference models
+                st.markdown('<div class="section-title">2. Sequence Predictability & Perplexity Scoring</div>', unsafe_allow_html=True)
+                st.markdown('<div class="section-caption">Evaluated strictly against the reference models trained on 80% AppTek training data.</div>', unsafe_allow_html=True)
 
-                    pp_col1, pp_col2, pp_col3 = st.columns(3)
-                    with pp_col1:
+                if m1_ref is not None and m2_ref is not None and m3_ref is not None:
+                    # Score against reference models
+                    pp_u = m1_ref.perplexity(all_tokens_nested)
+                    pp_b = m2_ref.perplexity(all_tokens_nested)
+                    pp_t = m3_ref.perplexity(all_tokens_nested)
+
+                    p_col1, p_col2, p_col3 = st.columns(3)
+                    with p_col1:
                         st.markdown(f"""
                         <div class="stat-card">
-                            <div class="stat-value">{pp1:.2f}</div>
+                            <div class="stat-value">{pp_u:,.2f}</div>
                             <div class="stat-label">Unigram Perplexity</div>
-                            <div class="stat-detail">Laplace (Add-1) Smoothed</div>
+                            <div class="stat-detail">Reference Corpus Baseline: 551.93</div>
                         </div>
                         """, unsafe_allow_html=True)
-                    with pp_col2:
+                    with p_col2:
                         st.markdown(f"""
                         <div class="stat-card">
-                            <div class="stat-value">{pp2:.2f}</div>
+                            <div class="stat-value">{pp_b:,.2f}</div>
                             <div class="stat-label">Bigram Perplexity</div>
-                            <div class="stat-detail">Laplace (Add-1) Smoothed</div>
+                            <div class="stat-detail">Reference Corpus Baseline: 586.42</div>
                         </div>
                         """, unsafe_allow_html=True)
-                    with pp_col3:
+                    with p_col3:
                         st.markdown(f"""
                         <div class="stat-card">
-                            <div class="stat-value">{pp3:.2f}</div>
+                            <div class="stat-value">{pp_t:,.2f}</div>
                             <div class="stat-label">Trigram Perplexity</div>
-                            <div class="stat-detail">Laplace (Add-1) Smoothed</div>
+                            <div class="stat-detail">Reference Corpus Baseline: 2,845.61</div>
                         </div>
                         """, unsafe_allow_html=True)
 
                     st.markdown("""
-                    <div class="viva-note">
-                        <b>Academic Note:</b> Perplexity evaluates how well the trained reference model (N=1,396 calls) predicts this sequence.
-                        It is NOT computed from the transcript's own internal counts. Lower perplexity denotes higher predictive likelihood under the learned model.
+                    <div class="academic-box">
+                        <b>Mathematical Interpretation:</b> Perplexity reflects the effective branching factor under the model.
+                        A lower score indicates that the sequence aligns closely with learned conversational patterns.
+                        Trigram perplexity is higher under Add-1 smoothing because multi-word parameter space sparsity (|V|² ≈ 2.62 × 10⁸)
+                        subjects unseen test transitions to severe uniform probability discounts.
                     </div>
                     """, unsafe_allow_html=True)
                 else:
-                    st.warning("Reference models currently initializing. Please refresh in a moment.")
+                    st.error("Reference models could not be loaded. Please ensure dataset files exist.")
 
-                # Local N-gram collocations
-                def extract_local_ngrams(words, n):
+                # Extract local n-grams
+                def extract_local_ngrams(tokens: List[str], n: int):
+                    if len(tokens) < n:
+                        return []
                     counts = {}
-                    for i in range(len(words) - n + 1):
-                        ph = " ".join(words[i:i + n])
-                        counts[ph] = counts.get(ph, 0) + 1
-                    return sorted(counts.items(), key=lambda x: x[1], reverse=True)
+                    for i in range(len(tokens) - n + 1):
+                        ngram = tuple(tokens[i:i+n])
+                        counts[ngram] = counts.get(ngram, 0) + 1
+                    sorted_items = sorted(counts.items(), key=lambda x: x[1], reverse=True)
+                    return [(" ".join(k) if n > 1 else k[0], v) for k, v in sorted_items]
 
                 u_local = extract_local_ngrams(all_words, 1)
                 b_local = extract_local_ngrams(all_words, 2)
@@ -584,7 +698,7 @@ elif nav_choice == "Analyze Transcript":
                     df_t = pd.DataFrame(t_local[:20], columns=["Trigram Phrase", "Count"])
                     st.dataframe(df_t, use_container_width=True)
                 with tab_toks:
-                    st.caption("Displays the segmented sentences with injected boundary tokens for conditional modeling:")
+                    st.caption("Displays segmented sentences with injected boundary tags for conditional modeling:")
                     for idx, s in enumerate(sentences[:6]):
                         toks_w_bound = ["<s>"] + tokenize_sentence(s) + ["</s>"]
                         st.code(f"Sentence {idx + 1}: {' '.join(toks_w_bound)}")
@@ -607,16 +721,24 @@ elif nav_choice == "N-gram Explorer":
     if not artifacts:
         st.error("Annotated reports not found. Run `python src/pipeline.py` first.")
     else:
-        order = st.radio("Select N-gram Order", ["Unigram (Single Words)", "Bigram (Two-Word Collocations)", "Trigram (Three-Word Sequences)"], horizontal=True)
+        # Explicit, high-contrast radio selector
+        order = st.radio(
+            "Select N-gram Order",
+            ["Unigram (Single Words)", "Bigram (Two-Word Collocations)", "Trigram (Three-Word Sequences)"],
+            horizontal=True
+        )
 
         if "Unigram" in order:
             df_curr = artifacts.get("prob_1g", artifacts.get("freq_1g"))
+            order_name = "Unigram"
             title = "Unigram Distribution (Single Words)"
         elif "Bigram" in order:
             df_curr = artifacts.get("prob_2g", artifacts.get("freq_2g"))
+            order_name = "Bigram"
             title = "Bigram Distribution (Two-Word Collocations)"
         else:
             df_curr = artifacts.get("prob_3g", artifacts.get("freq_3g"))
+            order_name = "Trigram"
             title = "Trigram Distribution (Three-Word Sequences)"
 
         if df_curr is not None and not df_curr.empty:
@@ -624,18 +746,18 @@ elif nav_choice == "N-gram Explorer":
             with f_col1:
                 search_query = st.text_input("Filter phrases by keyword (e.g., 'thank', 'service', 'account', 'order')", "")
             with f_col2:
-                top_limit = st.selectbox("Display Limit", [15, 25, 50, 100], index=1)
+                top_limit = st.selectbox("Number of results to display", [10, 25, 50, 100], index=1)
 
             if search_query:
-                filtered_df = df_curr[df_curr["ngram"].str.contains(search_query.lower(), na=False)]
+                filtered_df = df_curr[df_curr["ngram"].astype(str).str.contains(search_query.lower(), na=False)].copy()
             else:
-                filtered_df = df_curr
+                filtered_df = df_curr.copy()
 
             st.write(f"Displaying **{min(len(filtered_df), top_limit)}** of **{len(filtered_df):,}** phrases:")
 
             chart_col, table_col = st.columns([3, 2])
             with chart_col:
-                chart_df = filtered_df.head(top_limit)
+                chart_df = filtered_df.head(top_limit).copy()
                 fig = px.bar(
                     chart_df,
                     x="count",
@@ -646,54 +768,204 @@ elif nav_choice == "N-gram Explorer":
                     color_continuous_scale="Blues",
                     labels={"ngram": "Phrase", "count": "Corpus Frequency"}
                 )
-                fig.update_layout(yaxis={"categoryorder": "total ascending"}, height=520, margin=dict(l=20, r=20, t=30, b=20))
+                fig.update_layout(
+                    yaxis={"categoryorder": "total ascending"},
+                    height=520,
+                    margin=dict(l=10, r=20, t=30, b=20)
+                )
                 st.plotly_chart(fig, use_container_width=True)
 
             with table_col:
-                display_cols = ["ngram", "count"]
+                # Table with exact requested columns: N-gram | Count | Probability
+                table_display = pd.DataFrame()
+                table_display["N-gram"] = filtered_df["ngram"]
+                table_display["Count"] = filtered_df["count"].map("{:,}".format)
                 if "probability" in filtered_df.columns:
-                    display_cols.append("probability")
-                st.dataframe(filtered_df[display_cols].head(top_limit), use_container_width=True, height=520)
+                    table_display["Probability"] = filtered_df["probability"].map("{:.6f}".format)
+                else:
+                    table_display["Probability"] = "N/A"
+
+                st.dataframe(table_display.head(top_limit), use_container_width=True, height=520)
 
             # CSV download
             csv_data = filtered_df.to_csv(index=False).encode("utf-8")
             st.download_button(
-                f"📥 Download {order.split()[0]} Frequency Report (CSV)",
+                f"📥 Download {order_name} Frequency Report (CSV)",
                 csv_data,
-                f"apptek_{order.split()[0].lower()}_report.csv",
+                f"apptek_{order_name.lower()}_report.csv",
                 "text/csv"
             )
 
-        # Context Transition Lookup
+        # ----------------------------------------------------
+        # Context Probability Lookup
+        # ----------------------------------------------------
         st.markdown('<div class="section-title">Context Probability Lookup</div>', unsafe_allow_html=True)
-        st.markdown('<div class="section-caption">Query transition probabilities for a specific context word under Bigram and Trigram models.</div>', unsafe_allow_html=True)
-        query_word = st.text_input("Enter a context word to predict next tokens (e.g., 'thank', 'credit', 'customer')", "thank")
-        if query_word and m2_ref:
-            q_clean = query_word.lower().strip()
-            # Find bigrams starting with q_clean
-            candidates = []
-            for (w1, w2), count in m2_ref.ngram_counts.items():
-                if w1 == q_clean and w2 != "</s>":
-                    prob = m2_ref.probability(w2, context=w1, smoothed=True)
-                    mle_p = m2_ref.mle_probability(w2, context=w1)
-                    candidates.append({"Next Word": w2, "Bigram Count": count, "Laplace Probability": prob, "MLE Probability": mle_p})
-            if candidates:
-                cand_df = pd.DataFrame(candidates).sort_values(by="Bigram Count", ascending=False).head(10)
-                st.dataframe(cand_df, use_container_width=True)
-            else:
-                st.info(f"No direct bigram transitions found starting with `{q_clean}` in the training corpus.")
+        st.markdown('<div class="section-caption">Calculate Laplace-smoothed transition probabilities for a word given its preceding context.</div>', unsafe_allow_html=True)
+
+        lookup_model_type = st.radio(
+            "Model Order for Context Lookup",
+            ["Bigram Model: P(w_i | w_{i-1})", "Trigram Model: P(w_i | w_{i-2}, w_{i-1})"],
+            horizontal=True
+        )
+
+        if "Bigram" in lookup_model_type:
+            c_in1, c_in2 = st.columns(2)
+            with c_in1:
+                ctx_word = st.text_input("Context Word (w_{i-1})", "thank")
+            with c_in2:
+                target_word = st.text_input("Possible Next Word (w_i)", "you")
+
+            w1 = ctx_word.strip().lower()
+            w2 = target_word.strip().lower()
+
+            if not w1:
+                st.warning("Please enter a preceding context word (e.g., 'thank', 'credit', 'customer').")
+            elif not w2:
+                st.warning("Please enter a candidate next word (e.g., 'you', 'card', 'service').")
+            elif m2_ref is not None:
+                # Real calculated values from reference model
+                c_ctx = m2_ref.context_counts.get(w1, 0)
+                c_ngram = m2_ref.ngram_counts.get((w1, w2), 0)
+                v = m2_ref.vocab_size
+                p_smooth = m2_ref.probability(w2, context=w1, smoothed=True)
+                p_mle = m2_ref.mle_probability(w2, context=w1)
+
+                st.markdown(f"### Result: `P({w2} | {w1})`")
+
+                # Formula box with values substituted
+                st.markdown(f"""
+                <div class="academic-box">
+                    <b>Laplace Smoothing Formula:</b><br/>
+                    $$P({w2} \\mid {w1}) = \\frac{{C({w1}, {w2}) + 1}}{{C({w1}) + |V|}} = \\frac{{{c_ngram} + 1}}{{{c_ctx} + {v}}} = {p_smooth:.6f}$$
+                    <br/>
+                    <b>Unsmoothed Maximum Likelihood Estimate (MLE):</b><br/>
+                    $$P_{{MLE}}({w2} \\mid {w1}) = \\frac{{C({w1}, {w2})}}{{C({w1})}} = {p_mle:.6f}$$
+                </div>
+                """, unsafe_allow_html=True)
+
+                k1, k2, k3, k4 = st.columns(4)
+                with k1:
+                    st.metric("Context Count C(w_{i-1})", f"{c_ctx:,}")
+                with k2:
+                    st.metric("Bigram Count C(w_{i-1}, w_i)", f"{c_ngram:,}")
+                with k3:
+                    st.metric("Laplace Smoothed P", f"{p_smooth:.6f}")
+                with k4:
+                    st.metric("MLE Probability", f"{p_mle:.6f}")
+
+                # Transitions list
+                st.markdown(f"#### Top Observed Continuations for: `{w1}`")
+                transitions = m2_ref.get_transitions(w1, top_k=10)
+                if transitions:
+                    t_df = pd.DataFrame(transitions)
+                    t_df.columns = ["Next Word", "Count", "Laplace Probability", "MLE Probability"]
+                    t_df["Laplace Probability"] = t_df["Laplace Probability"].map("{:.6f}".format)
+                    t_df["MLE Probability"] = t_df["MLE Probability"].map("{:.6f}".format)
+                    
+                    t_col1, t_col2 = st.columns([3, 2])
+                    with t_col1:
+                        fig_trans = px.bar(
+                            pd.DataFrame(transitions),
+                            x="count",
+                            y="next_word",
+                            orientation="h",
+                            title=f"Most Frequent Next Tokens after '{w1}'",
+                            labels={"next_word": "Next Word", "count": "Co-occurrence Count"},
+                            color="count",
+                            color_continuous_scale="Blues"
+                        )
+                        fig_trans.update_layout(yaxis={"categoryorder": "total ascending"}, height=320, margin=dict(l=10, r=20, t=30, b=20))
+                        st.plotly_chart(fig_trans, use_container_width=True)
+                    with t_col2:
+                        st.dataframe(t_df, use_container_width=True, height=320)
+                else:
+                    st.info(f"Context `{w1}` was not observed in the training partition (C = 0). Under Add-1 smoothing, any candidate target token receives non-zero probability: P = 1 / (0 + {v}) = {1.0/v:.6f}.")
+
+        else:
+            # Trigram Model
+            c_in1, c_in2 = st.columns(2)
+            with c_in1:
+                ctx_phrase = st.text_input("Context History (Two Words: w_{i-2} w_{i-1})", "thank you")
+            with c_in2:
+                target_word = st.text_input("Possible Next Word (w_i)", "for")
+
+            tokens = ctx_phrase.strip().lower().split()
+            w3 = target_word.strip().lower()
+
+            if len(tokens) < 2:
+                st.warning("Please provide a 2-word context history for the Trigram model (e.g., 'thank you', 'customer service', 'credit card').")
+            elif not w3:
+                st.warning("Please enter a candidate next word (e.g., 'for', 'representative', 'number').")
+            elif m3_ref is not None:
+                ctx_tuple = (tokens[-2], tokens[-1])
+                c_ctx = m3_ref.context_counts.get(ctx_tuple, 0)
+                c_ngram = m3_ref.ngram_counts.get((ctx_tuple[0], ctx_tuple[1], w3), 0)
+                v = m3_ref.vocab_size
+                p_smooth = m3_ref.probability(w3, context=ctx_tuple, smoothed=True)
+                p_mle = m3_ref.mle_probability(w3, context=ctx_tuple)
+
+                st.markdown(f"### Result: `P({w3} | {ctx_tuple[0]}, {ctx_tuple[1]})`")
+
+                # Formula box with values substituted
+                st.markdown(f"""
+                <div class="academic-box">
+                    <b>Laplace Smoothing Formula:</b><br/>
+                    $$P({w3} \\mid {ctx_tuple[0]}, {ctx_tuple[1]}) = \\frac{{C({ctx_tuple[0]}, {ctx_tuple[1]}, {w3}) + 1}}{{C({ctx_tuple[0]}, {ctx_tuple[1]}) + |V|}} = \\frac{{{c_ngram} + 1}}{{{c_ctx} + {v}}} = {p_smooth:.6f}$$
+                    <br/>
+                    <b>Unsmoothed Maximum Likelihood Estimate (MLE):</b><br/>
+                    $$P_{{MLE}}({w3} \\mid {ctx_tuple[0]}, {ctx_tuple[1]}) = \\frac{{C({ctx_tuple[0]}, {ctx_tuple[1]}, {w3})}}{{C({ctx_tuple[0]}, {ctx_tuple[1]})}} = {p_mle:.6f}$$
+                </div>
+                """, unsafe_allow_html=True)
+
+                k1, k2, k3, k4 = st.columns(4)
+                with k1:
+                    st.metric("Context Count C(w_{i-2}, w_{i-1})", f"{c_ctx:,}")
+                with k2:
+                    st.metric("Trigram Count C(ctx, w_i)", f"{c_ngram:,}")
+                with k3:
+                    st.metric("Laplace Smoothed P", f"{p_smooth:.6f}")
+                with k4:
+                    st.metric("MLE Probability", f"{p_mle:.6f}")
+
+                # Transitions list
+                st.markdown(f"#### Top Observed Continuations for: `{' '.join(ctx_tuple)}`")
+                transitions = m3_ref.get_transitions(ctx_tuple, top_k=10)
+                if transitions:
+                    t_df = pd.DataFrame(transitions)
+                    t_df.columns = ["Next Word", "Count", "Laplace Probability", "MLE Probability"]
+                    t_df["Laplace Probability"] = t_df["Laplace Probability"].map("{:.6f}".format)
+                    t_df["MLE Probability"] = t_df["MLE Probability"].map("{:.6f}".format)
+
+                    t_col1, t_col2 = st.columns([3, 2])
+                    with t_col1:
+                        fig_trans = px.bar(
+                            pd.DataFrame(transitions),
+                            x="count",
+                            y="next_word",
+                            orientation="h",
+                            title=f"Most Frequent Next Tokens after '{' '.join(ctx_tuple)}'",
+                            labels={"next_word": "Next Word", "count": "Co-occurrence Count"},
+                            color="count",
+                            color_continuous_scale="Blues"
+                        )
+                        fig_trans.update_layout(yaxis={"categoryorder": "total ascending"}, height=320, margin=dict(l=10, r=20, t=30, b=20))
+                        st.plotly_chart(fig_trans, use_container_width=True)
+                    with t_col2:
+                        st.dataframe(t_df, use_container_width=True, height=320)
+                else:
+                    st.info(f"Context `{' '.join(ctx_tuple)}` was not observed in the training partition (C = 0). Under Add-1 smoothing, any candidate target token receives non-zero probability: P = 1 / (0 + {v}) = {1.0/v:.6f}.")
 
 # ----------------------------------------------------
 # 4. ISSUE INTELLIGENCE
 # ----------------------------------------------------
 elif nav_choice == "Issue Intelligence":
     st.markdown('<div class="section-title">Customer Issue Phrase Analysis</div>', unsafe_allow_html=True)
-    st.markdown('<div class="section-caption">Analysis of recurring multi-word collocations across categories and intents in the Bitext Customer Support Dataset.</div>', unsafe_allow_html=True)
 
+    # Concise methodology note
     st.markdown("""
     <div class="viva-note">
-        <b>Academic Methodology Note:</b> High-frequency N-grams indicate recurring domain terminology and conversational phrasing associated with an issue.
-        They represent vocabulary patterns for call analysis and do not constitute automatic intent classification by themselves.
+        Recurring N-grams are shown as language patterns associated with customer-support categories and intents.
+        They do not constitute automatic intent classification by themselves.
     </div>
     """, unsafe_allow_html=True)
 
@@ -701,53 +973,78 @@ elif nav_choice == "Issue Intelligence":
         st.error("Bitext issue phrase report not found. Run `python src/pipeline.py` first.")
     else:
         df_issue = artifacts["issue_report"]
-        mode = st.radio("Taxonomy Level", ["Category Level (11 Commercial Categories)", "Intent Level (27 Specific Customer Intents)"], horizontal=True)
 
-        if "Category" in mode:
-            categories = sorted(df_issue[df_issue["level"] == "category"]["target"].unique().tolist())
-            selected = st.selectbox("Select Customer Issue Category", categories)
-            df_sel = df_issue[(df_issue["level"] == "category") & (df_issue["target"] == selected)]
+        # Category -> Intent Mapping
+        CATEGORY_INTENT_MAP = {
+            'ORDER': ['cancel_order', 'change_order', 'place_order', 'track_order'],
+            'REFUND': ['check_refund_policy', 'get_refund', 'track_refund'],
+            'PAYMENT': ['check_payment_methods', 'payment_issue'],
+            'ACCOUNT': ['create_account', 'delete_account', 'edit_account', 'recover_password', 'registration_problems', 'switch_account'],
+            'CANCEL': ['check_cancellation_fee'],
+            'DELIVERY': ['delivery_options', 'delivery_period'],
+            'SHIPPING': ['change_shipping_address', 'set_up_shipping_address'],
+            'INVOICE': ['check_invoice', 'get_invoice'],
+            'CONTACT': ['contact_customer_service', 'contact_human_agent'],
+            'FEEDBACK': ['complaint', 'review'],
+            'SUBSCRIPTION': ['newsletter_subscription']
+        }
+
+        all_categories = sorted(list(CATEGORY_INTENT_MAP.keys()))
+        
+        sel_c1, sel_c2 = st.columns(2)
+        with sel_c1:
+            selected_cat = st.selectbox("1. Select Support Category", all_categories, index=0)
+
+        with sel_c2:
+            available_intents = ["All Category Phrases"] + CATEGORY_INTENT_MAP.get(selected_cat, [])
+            selected_intent = st.selectbox("2. Select Intent within Category", available_intents, index=0)
+
+        # Filter phrases based on selection
+        if selected_intent == "All Category Phrases":
+            df_sel = df_issue[(df_issue["level"] == "category") & (df_issue["target"] == selected_cat)].copy()
+            view_label = f"Category: {selected_cat}"
         else:
-            intents = sorted(df_issue[df_issue["level"] == "intent"]["target"].unique().tolist())
-            selected = st.selectbox("Select Customer Intent", intents)
-            df_sel = df_issue[(df_issue["level"] == "intent") & (df_issue["target"] == selected)]
+            df_sel = df_issue[(df_issue["level"] == "intent") & (df_issue["target"] == selected_intent)].copy()
+            view_label = f"Intent: {selected_intent} ({selected_cat})"
 
-        st.markdown(f"### Recurring Phrases for: `{selected}`")
+        st.markdown(f"### Recurring Phrases for: `{view_label}`")
 
-        c1, c2, c3 = st.columns(3)
-        with c1:
-            st.markdown("**Top Unigrams**")
-            u_df = df_sel[df_sel["ngram_order"] == "unigram"][["phrase", "count"]].reset_index(drop=True)
-            st.dataframe(u_df, use_container_width=True)
-        with c2:
-            st.markdown("**Top Bigrams**")
+        # Two columns for Bigrams & Trigrams
+        col_b, col_t = st.columns(2)
+        with col_b:
+            st.markdown("**Top Bigram Issue Phrases**")
             b_df = df_sel[df_sel["ngram_order"] == "bigram"][["phrase", "count"]].reset_index(drop=True)
-            st.dataframe(b_df, use_container_width=True)
-        with c3:
-            st.markdown("**Top Trigrams**")
+            b_df.columns = ["Bigram Phrase", "Count"]
+            st.dataframe(b_df, use_container_width=True, height=280)
+
+        with col_t:
+            st.markdown("**Top Trigram Issue Phrases**")
             t_df = df_sel[df_sel["ngram_order"] == "trigram"][["phrase", "count"]].reset_index(drop=True)
-            st.dataframe(t_df, use_container_width=True)
+            t_df.columns = ["Trigram Phrase", "Count"]
+            st.dataframe(t_df, use_container_width=True, height=280)
 
-        # Plotly grouped chart
-        fig_issue = px.bar(
-            df_sel,
-            x="phrase",
-            y="count",
-            color="ngram_order",
-            barmode="group",
-            title=f"Phrase Frequency Distribution for: {selected}",
-            color_discrete_sequence=["#1E3A8A", "#2563EB", "#059669"],
-            labels={"phrase": "Phrase", "count": "Frequency", "ngram_order": "Order"}
-        )
-        fig_issue.update_layout(height=420, margin=dict(l=20, r=20, t=30, b=20))
-        st.plotly_chart(fig_issue, use_container_width=True)
+        # Horizontal Bar Chart for readability
+        chart_data = df_sel[df_sel["ngram_order"].isin(["bigram", "trigram"])].sort_values(by="count", ascending=True).tail(15)
+        if not chart_data.empty:
+            fig_issue = px.bar(
+                chart_data,
+                x="count",
+                y="phrase",
+                orientation="h",
+                color="ngram_order",
+                title=f"Top Collocations — {view_label}",
+                color_discrete_sequence=["#2563EB", "#059669"],
+                labels={"phrase": "Phrase", "count": "Corpus Frequency", "ngram_order": "Order"}
+            )
+            fig_issue.update_layout(height=400, margin=dict(l=10, r=20, t=30, b=20))
+            st.plotly_chart(fig_issue, use_container_width=True)
 
-        # Download
+        # CSV Download
         csv_issue = df_sel.to_csv(index=False).encode("utf-8")
         st.download_button(
-            f"📥 Download Phrases for {selected} (CSV)",
+            f"📥 Download Phrases for {view_label} (CSV)",
             csv_issue,
-            f"issue_phrases_{selected.lower()}.csv",
+            f"issue_phrases_{selected_cat.lower()}.csv",
             "text/csv"
         )
 
@@ -768,25 +1065,19 @@ elif nav_choice == "Model Evaluation":
         <div class="academic-box">
             <b>Experimental Protocol:</b><br/>
             • <b>Partitioning:</b> Transcript-level split (80% Train, N=1,396 / 20% Held-Out Test, N=350, Random Seed 42).<br/>
-            • <b>Data Leakage Prevention:</b> Whole call dialogues were assigned to either train or test; no sentences from the same call cross partitions.<br/>
-            • <b>Smoothing:</b> Add-1 (Laplace) smoothing applied across unconditional and conditional distributions.<br/>
-            • <b>Vocabulary (|V|):</b> Fixed 16,186 unique word types observed in training (+1 terminal tag <code>&lt;/s&gt;</code>).
+            • <b>Zero Leakage:</b> Dialogue transcripts were partitioned whole; no utterances from test calls cross into training.<br/>
+            • <b>Smoothing:</b> Laplace (Add-1) smoothing with fixed training vocabulary |V| = 16,186 (effective |V| = 16,187 with <code>&lt;/s&gt;</code>).<br/>
+            • <b>Evaluation Metric:</b> Test-set cross-entropy sequence perplexity: PP(W) = exp( - 1/M &Sigma; ln P(w_i | context) ).
         </div>
         """, unsafe_allow_html=True)
 
-        col_t, col_c = st.columns([2, 3])
-        with col_t:
-            st.markdown("### 📋 Perplexity Metrics Table")
-            st.dataframe(df_pp, use_container_width=True)
-            st.download_button(
-                "📥 Download Perplexity Report (CSV)",
-                df_pp.to_csv(index=False).encode("utf-8"),
-                "perplexity_report.csv",
-                "text/csv"
-            )
+        # Quantitative Results Table & Plot
+        col_tbl, col_plt = st.columns([3, 2])
+        with col_tbl:
+            st.markdown("### Quantitative Perplexity Summary")
+            st.dataframe(df_pp, use_container_width=True, height=240)
 
-        with col_c:
-            st.markdown("### 📊 Mean Perplexity Comparison")
+        with col_plt:
             fig_p = px.bar(
                 df_pp,
                 x="model",
@@ -794,73 +1085,62 @@ elif nav_choice == "Model Evaluation":
                 text="mean_perplexity",
                 color="model",
                 color_discrete_sequence=["#1E3A8A", "#2563EB", "#D97706"],
-                labels={"model": "Model", "mean_perplexity": "Mean Perplexity"}
+                title="Mean Perplexity across 350 Test Transcripts"
             )
-            fig_p.update_traces(textposition='outside')
-            fig_p.update_layout(height=340, margin=dict(l=20, r=20, t=30, b=20))
+            fig_p.update_traces(textposition="outside")
+            fig_p.update_layout(height=280, margin=dict(l=10, r=20, t=30, b=20))
             st.plotly_chart(fig_p, use_container_width=True)
 
-        # Dynamic metric extraction
-        u_row = df_pp[df_pp["model"].str.contains("Unigram")]
-        b_row = df_pp[df_pp["model"].str.contains("Bigram")]
-        t_row = df_pp[df_pp["model"].str.contains("Trigram")]
+        # Mathematical Justification
+        st.markdown('<div class="section-title">Mathematical & Empirical Analysis for Academic Viva</div>', unsafe_allow_html=True)
+        st.markdown("""
+        <div class="academic-box">
+            <b>Why is Trigram Perplexity (2,845.61) higher than Unigram (551.93) and Bigram (586.42)?</b><br/><br/>
+            1. <b>Massive Parameter Space Sparsity:</b><br/>
+            With an effective vocabulary of |V| = 16,187, the theoretical Trigram context space contains |V|² &approx; 2.62 &times; 10⁸ possible state combinations.
+            In unconstrained, multi-domain conversational speech across 16 domains and 14 accents, the vast majority of 3-word combinations in the test transcripts
+            were never observed during training.<br/><br/>
+            2. <b>Severe Add-1 Smoothing Discounting:</b><br/>
+            When an unseen context (w_{i-2}, w_{i-1}) occurs in a test sentence, Laplace Add-1 smoothing assigns:
+            $$P(w_i \\mid w_{i-2}, w_{i-1}) = \\frac{0 + 1}{0 + 16,187} \\approx 6.18 \\times 10^{-5}$$
+            Accumulating hundreds of &minus;ln(6.18 &times; 10⁻⁵) &approx; 9.69 penalties heavily depresses sequence probability, leading to elevated exponential perplexity.<br/><br/>
+            3. <b>Academic Defense Note:</b><br/>
+            This empirical outcome is completely authentic and standard in statistical language modeling.
+            Laplace smoothing successfully guarantees non-zero probabilities and prevents infinite perplexity crashes, but in industrial settings higher-order models
+            rely on advanced backoff discounting algorithms (such as Good-Turing or Kneser-Ney).
+        </div>
+        """, unsafe_allow_html=True)
 
-        u_mean = u_row["mean_perplexity"].iloc[0] if not u_row.empty else 551.93
-        u_med = u_row["median_perplexity"].iloc[0] if not u_row.empty else 497.73
-        b_mean = b_row["mean_perplexity"].iloc[0] if not b_row.empty else 586.42
-        b_med = b_row["median_perplexity"].iloc[0] if not b_row.empty else 520.03
-        t_mean = t_row["mean_perplexity"].iloc[0] if not t_row.empty else 2845.61
+        # PDF Download Section
+        st.markdown('<div class="section-title">Official Academic Reports & Documentation</div>', unsafe_allow_html=True)
+        st.markdown('<div class="section-caption">Download publication-ready documentation generated directly from verified experimental pipeline metrics.</div>', unsafe_allow_html=True)
 
-        st.markdown('<div class="section-title">Academic Discussion & Theoretical Findings</div>', unsafe_allow_html=True)
-        st.markdown(f"""
-        **1. What Perplexity Measures:**
-        $$\\text{{Perplexity}}(W) = \\exp\\left( -\\frac{{1}}{{M}} \\sum_{{i=1}}^M \\ln P(w_i \\mid \\text{{context}}) \\right)$$
-        Perplexity corresponds to the exponentiated cross-entropy of the model over the test token sequence. Intuitively, it represents the effective branching factor: how many equally likely words the model is choosing among. **Lower perplexity indicates higher predictive probability under the learned model.**
+        d_col1, d_col2 = st.columns(2)
+        arch_pdf = BASE_DIR / "docs" / "Architecture_and_Methodology.pdf"
+        eval_pdf = BASE_DIR / "docs" / "Evaluation_Report.pdf"
 
-        **2. Unigram vs Bigram Behavior in Multi-Domain Conversational Data:**
-        - Unigram Mean Perplexity: **{u_mean:.2f}** (Median: **{u_med:.2f}**).
-        - Bigram Mean Perplexity: **{b_mean:.2f}** (Median: **{b_med:.2f}**).
-        - In scripted sub-domains (e.g. Banking, Delivery), bigrams excel due to tight collocations (*“thank you”*, *“customer service”*, *“credit card”*).
-        - However, across unconstrained multi-topic dialogue, vocabulary dispersion means unseen transitions receive uniform Add-1 smoothing penalties across $|V| = 16,186$ outcomes.
-
-        **3. Why Add-1 Smoothing Causes High Trigram Perplexity:**
-        - Trigram Mean Perplexity: **{t_mean:.2f}**.
-        - The trigram context parameter space scales as $|V|^2 \\approx (16,186)^2 \\approx 2.62 \\times 10^8$ potential states.
-        - Because conversational dialogue is highly varied, the majority of 3-word test sequences are unseen in the training partition.
-        - Uniform Add-1 smoothing assigns a probability of $P = \\frac{{1}}{{0 + |V|}} \\approx 6.18 \\times 10^{{-5}}$ to each unseen transition, heavily penalizing log-likelihood.
-        - This is a well-established theoretical characteristic of uniform Add-1 smoothing on higher-order models in computational linguistics.
-        """)
-
-        # Documentation Downloads
-        st.markdown('<div class="section-title">Official Documentation Artifacts</div>', unsafe_allow_html=True)
-        st.markdown('<div class="section-caption">Compiled ReportLab PDF artifacts with exact metrics generated from the experimental pipeline:</div>', unsafe_allow_html=True)
-        
-        pdf_col1, pdf_col2 = st.columns(2)
-        arch_pdf_path = BASE_DIR / "docs" / "Architecture_and_Methodology.pdf"
-        eval_pdf_path = BASE_DIR / "docs" / "Evaluation_Report.pdf"
-
-        with pdf_col1:
-            if arch_pdf_path.exists():
-                with open(arch_pdf_path, "rb") as f:
+        with d_col1:
+            if arch_pdf.exists():
+                with open(arch_pdf, "rb") as f:
                     st.download_button(
-                        "📄 Download Architecture & Methodology (PDF)",
+                        "📄 Download Architecture & Methodology PDF",
                         f.read(),
-                        "Architecture_and_Methodology.pdf",
+                        "CALLNGRAM_Architecture_and_Methodology.pdf",
                         "application/pdf",
                         use_container_width=True
                     )
             else:
-                st.info("Architecture PDF not found in docs/")
+                st.info("Architecture PDF not found. Run `python src/generate_reports.py`.")
 
-        with pdf_col2:
-            if eval_pdf_path.exists():
-                with open(eval_pdf_path, "rb") as f:
+        with d_col2:
+            if eval_pdf.exists():
+                with open(eval_pdf, "rb") as f:
                     st.download_button(
-                        "📄 Download Experimental Evaluation Report (PDF)",
+                        "📊 Download Experimental Evaluation Report PDF",
                         f.read(),
-                        "Evaluation_Report.pdf",
+                        "CALLNGRAM_Evaluation_Report.pdf",
                         "application/pdf",
                         use_container_width=True
                     )
             else:
-                st.info("Evaluation Report PDF not found in docs/")
+                st.info("Evaluation Report PDF not found. Run `python src/generate_reports.py`.")

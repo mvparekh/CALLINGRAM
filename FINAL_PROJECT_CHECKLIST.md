@@ -75,3 +75,15 @@ Each item is strictly audited against actual code execution and test verificatio
 - [x] **GitHub Repository Configured & Pushed**: Verified live on `https://github.com/mvparekh/CALLINGRAM` on branch `main`
 - [x] **Streamlit Community Cloud-ready**: App entry point `app.py` validated and tested locally
 - [ ] **Live Public URL**: Requires 1-click authorization on share.streamlit.io (Select repository `mvparekh/CALLINGRAM`, file `app.py`, click Deploy)
+
+### 11. Final Visual & Runtime QA
+- [x] **Dashboard tested**: Corpus KPIs, separation overview, 8-step pipeline visual, and benchmark chart verified with 0 exceptions
+- [x] **Transcript analysis tested**: Preset samples, held-out real test dialogue, custom input, and empty/short/OOV edge cases tested with 0 exceptions
+- [x] **N-gram explorer tested**: Unigram, Bigram, Trigram selectors, limit controls, search filter, horizontal bar chart, and exact N-gram | Count | Probability table verified with 0 exceptions
+- [x] **Context probability tested**: Bigram P(you | thank) and Trigram P(for | thank, you) calculated with real reference models, formula cards, metrics, and top transition tables with 0 exceptions
+- [x] **Issue intelligence tested**: Category -> Intent -> Top Phrases hierarchy across 11 categories and 27 intents, with no horizontal clipping and clean bar charts
+- [x] **Model evaluation tested**: Test-set perplexity metrics, comparison chart, theoretical viva explanation, and PDF download buttons verified
+- [x] **PDF formulas inspected**: High-resolution crisp equation images and mathematical notation generated and verified in docs/ and reports/
+- [x] **PDF layout inspected**: Verified 3-page layout for both Architecture and Evaluation reports with zero text overflow or table clipping
+- [x] **Clean environment tested**: Zero external API dependencies, verified offline regex fallback, and .streamlit/config.toml high-contrast theme
+

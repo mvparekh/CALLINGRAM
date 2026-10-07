@@ -17,14 +17,39 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import (
-    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, KeepTogether, HRFlowable
+    SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, PageBreak, KeepTogether, HRFlowable, Image
 )
 from reportlab.pdfgen import canvas
+import matplotlib.pyplot as plt
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 DOCS_DIR = BASE_DIR / "docs"
 REPORTS_DIR = BASE_DIR / "reports"
 DATA_DIR = BASE_DIR / "data" / "annotated"
+
+
+def ensure_equation_images():
+    """Generates crisp high-resolution mathematical equation images via Matplotlib."""
+    eq_dir = DATA_DIR / "eq_images"
+    eq_dir.mkdir(parents=True, exist_ok=True)
+
+    eqs = {
+        "eq_unigram.png": (r"P(w) = \frac{C(w) + 1}{N + V}", 2.8, 0.55),
+        "eq_bigram.png": (r"P(w_i \mid w_{i-1}) = \frac{C(w_{i-1}, w_i) + 1}{C(w_{i-1}) + V}", 3.4, 0.55),
+        "eq_trigram.png": (r"P(w_i \mid w_{i-2}, w_{i-1}) = \frac{C(w_{i-2}, w_{i-1}, w_i) + 1}{C(w_{i-2}, w_{i-1}) + V}", 3.9, 0.55),
+        "eq_pp.png": (r"PP(W) = \exp\left( -\frac{1}{M} \sum_{i=1}^{M} \ln P(w_i \mid \text{context}) \right)", 4.0, 0.6)
+    }
+
+    paths = {}
+    for name, (latex, w, h) in eqs.items():
+        p = eq_dir / name
+        fig = plt.figure(figsize=(w, h), dpi=300)
+        fig.text(0.5, 0.5, f"${latex}$", ha='center', va='center', fontsize=12, color='#0F172A')
+        plt.axis('off')
+        plt.savefig(p, bbox_inches='tight', pad_inches=0.03, transparent=True)
+        plt.close(fig)
+        paths[name] = p
+    return paths
 
 
 class NumberedCanvas(canvas.Canvas):
@@ -305,24 +330,50 @@ def generate_architecture_report(artifacts: dict, output_path: Path):
     story.append(Paragraph("• <b>Bigram (N=2):</b> Conditions on the immediately preceding token: P(W) = prod P(w_i | w_{i-1})", styles["BulletCustom"]))
     story.append(Paragraph("• <b>Trigram (N=3):</b> Conditions on two preceding tokens: P(W) = prod P(w_i | w_{i-2}, w_{i-1})", styles["BulletCustom"]))
 
+    eq_paths = ensure_equation_images()
+
     # 7 & 8. Smoothing & Probability Formulas
     story.append(Paragraph("7 & 8. Laplace (Add-1) Smoothing and Probability Formulas", styles["SectionHeading"]))
     story.append(Paragraph(
         "To eliminate zero probabilities for unseen N-grams while maintaining mathematically valid probability distributions, "
-        "Laplace smoothing adds a pseudo-count of 1 to every transition in the parameter space:",
+        "Laplace smoothing adds a pseudo-count of 1 to every transition in the parameter space.",
+        styles["BodyTextCustom"]
+    ))
+    story.append(Paragraph(
+        "<b>Mathematical Parameter Definitions:</b><br/>"
+        "• <b>C:</b> Frequency count of the N-gram or history context in the training partition.<br/>"
+        "• <b>N:</b> Total evaluated tokens in the training corpus (N = 1,015,433).<br/>"
+        "• <b>V:</b> Effective vocabulary size (|V| = 16,186 unique training words + 1 boundary token = 16,187).",
         styles["BodyTextCustom"]
     ))
 
     form_data = [
-        [Paragraph("Model", styles["TableHeader"]), Paragraph("Maximum Likelihood Estimate (MLE)", styles["TableHeader"]), Paragraph("Laplace (Add-1) Smoothed Formula", styles["TableHeader"])],
-        [Paragraph("Unigram", styles["TableCell"]), Paragraph("P(w) = count(w) / N", styles["TableCell"]), Paragraph("<b>P(w) = (count(w) + 1) / (N + |V|)</b>", styles["TableCell"])],
-        [Paragraph("Bigram", styles["TableCell"]), Paragraph("P(w_i | w_{i-1}) = count(w_{i-1}, w_i) / count(w_{i-1})", styles["TableCell"]), Paragraph("<b>P(w_i | w_{i-1}) = (count(w_{i-1}, w_i) + 1) / (count(w_{i-1}) + |V|)</b>", styles["TableCell"])],
-        [Paragraph("Trigram", styles["TableCell"]), Paragraph("P(w_i | w_{i-2}, w_{i-1}) = count(w_{i-2}, w_{i-1}, w_i) / count(w_{i-2}, w_{i-1})", styles["TableCell"]), Paragraph("<b>P(w_i | w_{i-2}, w_{i-1}) = (count(w_{i-2}, w_{i-1}, w_i) + 1) / (count(w_{i-2}, w_{i-1}) + |V|)</b>", styles["TableCell"])],
+        [
+            Paragraph("Model", styles["TableHeader"]),
+            Paragraph("Maximum Likelihood Estimate (MLE)", styles["TableHeader"]),
+            Paragraph("Laplace (Add-1) Smoothed Formula", styles["TableHeader"])
+        ],
+        [
+            Paragraph("<b>Unigram (N=1)</b>", styles["TableCell"]),
+            Paragraph("P(w) = C(w) / N", styles["TableCell"]),
+            Image(str(eq_paths["eq_unigram.png"]), width=2.5*inch, height=0.48*inch)
+        ],
+        [
+            Paragraph("<b>Bigram (N=2)</b>", styles["TableCell"]),
+            Paragraph("P(w<sub>i</sub> | w<sub>i-1</sub>) = C(w<sub>i-1</sub>, w<sub>i</sub>) / C(w<sub>i-1</sub>)", styles["TableCell"]),
+            Image(str(eq_paths["eq_bigram.png"]), width=2.8*inch, height=0.48*inch)
+        ],
+        [
+            Paragraph("<b>Trigram (N=3)</b>", styles["TableCell"]),
+            Paragraph("P(w<sub>i</sub> | w<sub>i-2</sub>, w<sub>i-1</sub>) = C(w<sub>i-2</sub>, w<sub>i-1</sub>, w<sub>i</sub>) / C(w<sub>i-2</sub>, w<sub>i-1</sub>)", styles["TableCell"]),
+            Image(str(eq_paths["eq_trigram.png"]), width=3.0*inch, height=0.48*inch)
+        ],
     ]
     t_form = Table(form_data, colWidths=[1.1*inch, 2.7*inch, 3.0*inch])
     t_form.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor("#1E3A8A")),
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
         ('GRID', (0, 0), (-1, -1), 0.5, colors.HexColor("#CBD5E1")),
         ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor("#F8FAFC")]),
         ('TOPPADDING', (0, 0), (-1, -1), 4),
@@ -339,14 +390,17 @@ def generate_architecture_report(artifacts: dict, output_path: Path):
     # 9. Perplexity Formula
     story.append(Paragraph("9. Perplexity Metric Formulation", styles["SectionHeading"]))
     story.append(Paragraph(
-        "Perplexity (PP) measures the effective branching factor of the language model over an evaluated sequence of M tokens:",
+        "Perplexity (PP) measures the effective branching factor and geometric uncertainty of the language model over an evaluated sequence of M tokens:",
         styles["BodyTextCustom"]
     ))
+    story.append(Spacer(1, 3))
+    story.append(Image(str(eq_paths["eq_pp.png"]), width=3.4*inch, height=0.52*inch))
+    story.append(Spacer(1, 3))
     story.append(Paragraph(
-        "<b>PP(W) = exp( - (1 / M) sum ln P(w_i | context) )</b>", styles["FormulaBox"]
-    ))
-    story.append(Paragraph(
-        "<b>Critical Evaluation Constraint:</b> Perplexity for an input transcript MUST be computed strictly with respect to the "
+        "<b>Formula Notation:</b> PP(W) = exp( - (1 / M) * sum ln P(w<sub>i</sub> | context) )<br/>"
+        "• <b>M:</b> Number of evaluated word tokens in the target transcript.<br/>"
+        "• <b>P(w<sub>i</sub> | context):</b> Smoothed conditional probability evaluated strictly against the training reference model.<br/>"
+        "• <b>Critical Evaluation Constraint:</b> Perplexity for an input transcript MUST be computed strictly with respect to the "
         "reference model trained on the held-out training partition. Computing perplexity from an uploaded transcript's own "
         "frequencies is mathematically invalid (trivial self-overfitting).",
         styles["BodyTextCustom"]
@@ -482,10 +536,20 @@ def generate_evaluation_report(artifacts: dict, output_path: Path):
     ]))
     story.append(t_top)
 
+    eq_paths = ensure_equation_images()
+
     # 5. Perplexity Results
     story.append(Paragraph("5. Quantitative Perplexity Benchmarks", styles["SectionHeading"]))
     story.append(Paragraph(
-        "Intrinsic language modeling evaluation on the 350 held-out test transcripts yielded the following results:",
+        "Intrinsic language modeling evaluation on the 350 held-out test transcripts was conducted using sequence perplexity:",
+        styles["BodyTextCustom"]
+    ))
+    story.append(Spacer(1, 2))
+    story.append(Image(str(eq_paths["eq_pp.png"]), width=3.3*inch, height=0.5*inch))
+    story.append(Spacer(1, 2))
+    story.append(Paragraph(
+        "<b>Perplexity Metric:</b> PP(W) = exp( -(1/M) * sum ln P(w<sub>i</sub> | context) ), where M is the evaluated token count "
+        "and P is the Laplace-smoothed conditional probability computed strictly from the training partition reference models.",
         styles["BodyTextCustom"]
     ))
 

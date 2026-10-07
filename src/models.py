@@ -75,6 +75,37 @@ class NGramLanguageModel:
         self.total_tokens = total_toks
         return self
 
+    def _normalize_context(self, context: Optional[Any]) -> Any:
+        """Standardizes context format across strings, tuples, and lists."""
+        if self.n == 1:
+            return None
+        elif self.n == 2:
+            if context is None:
+                return ""
+            if isinstance(context, (list, tuple)):
+                return str(context[0]).lower().strip() if len(context) > 0 else ""
+            return str(context).lower().strip()
+        elif self.n == 3:
+            if context is None:
+                return ("", "")
+            if isinstance(context, (list, tuple)):
+                if len(context) >= 2:
+                    return (str(context[0]).lower().strip(), str(context[1]).lower().strip())
+                elif len(context) == 1:
+                    parts = str(context[0]).lower().strip().split()
+                    if len(parts) >= 2:
+                        return (parts[-2], parts[-1])
+                    return (parts[0] if parts else "", "")
+                return ("", "")
+            elif isinstance(context, str):
+                parts = context.lower().strip().split()
+                if len(parts) >= 2:
+                    return (parts[-2], parts[-1])
+                elif len(parts) == 1:
+                    return (parts[0], "")
+                return ("", "")
+            return ("", "")
+
     def probability(self, word: str, context: Optional[Any] = None, smoothed: bool = True) -> float:
         """
         Calculates N-gram probability P(word | context).
@@ -89,43 +120,30 @@ class NGramLanguageModel:
           - Bigram/Trigram: P(w | ctx) = count(ctx, w) / count(ctx) if count(ctx) > 0 else 0.0
         """
         v = self.vocab_size
+        target_word = str(word).lower().strip()
 
-        if not smoothed:
-            # Unsmoothed Maximum Likelihood Estimation
-            if self.n == 1:
-                if self.total_tokens == 0:
-                    return 0.0
-                return self.ngram_counts.get(word, 0) / float(self.total_tokens)
-            elif self.n == 2:
-                ctx = context
-                c_ctx = self.context_counts.get(ctx, 0)
-                if c_ctx == 0:
-                    return 0.0
-                return self.ngram_counts.get((ctx, word), 0) / float(c_ctx)
-            elif self.n == 3:
-                ctx = context
-                c_ctx = self.context_counts.get(ctx, 0)
-                if c_ctx == 0:
-                    return 0.0
-                return self.ngram_counts.get((ctx[0], ctx[1], word), 0) / float(c_ctx)
-
-        # Laplace (Add-1) Smoothing
         if self.n == 1:
-            c_w = self.ngram_counts.get(word, 0)
+            c_w = self.ngram_counts.get(target_word, 0)
+            if not smoothed:
+                return (c_w / float(self.total_tokens)) if self.total_tokens > 0 else 0.0
             return (c_w + 1.0) / (self.total_tokens + v)
 
-        elif self.n == 2:
-            ctx = context
-            ngram = (ctx, word)
+        ctx = self._normalize_context(context)
+
+        if self.n == 2:
+            ngram = (ctx, target_word)
             c_ngram = self.ngram_counts.get(ngram, 0)
             c_ctx = self.context_counts.get(ctx, 0)
+            if not smoothed:
+                return (c_ngram / float(c_ctx)) if c_ctx > 0 else 0.0
             return (c_ngram + 1.0) / (c_ctx + v)
 
         elif self.n == 3:
-            ctx = context  # tuple of (w_{i-2}, w_{i-1})
-            ngram = (ctx[0], ctx[1], word)
+            ngram = (ctx[0], ctx[1], target_word)
             c_ngram = self.ngram_counts.get(ngram, 0)
             c_ctx = self.context_counts.get(ctx, 0)
+            if not smoothed:
+                return (c_ngram / float(c_ctx)) if c_ctx > 0 else 0.0
             return (c_ngram + 1.0) / (c_ctx + v)
 
         return 1.0 / v
@@ -133,6 +151,41 @@ class NGramLanguageModel:
     def mle_probability(self, word: str, context: Optional[Any] = None) -> float:
         """Convenience method for unsmoothed Maximum Likelihood Estimation."""
         return self.probability(word, context=context, smoothed=False)
+
+    def get_transitions(self, context: Any, top_k: int = 10) -> List[Dict[str, Any]]:
+        """
+        Returns top next-word transitions for a given context sorted by frequency.
+        """
+        ctx = self._normalize_context(context)
+        c_ctx = self.context_counts.get(ctx, 0)
+        v = self.vocab_size
+
+        results = []
+        if self.n == 2:
+            for (w1, w2), count in self.ngram_counts.items():
+                if w1 == ctx and w2 != "</s>":
+                    p_smooth = (count + 1.0) / (c_ctx + v)
+                    p_mle = count / float(c_ctx) if c_ctx > 0 else 0.0
+                    results.append({
+                        "next_word": w2,
+                        "count": count,
+                        "smoothed_prob": p_smooth,
+                        "mle_prob": p_mle
+                    })
+        elif self.n == 3:
+            for (w1, w2, w3), count in self.ngram_counts.items():
+                if (w1, w2) == ctx and w3 != "</s>":
+                    p_smooth = (count + 1.0) / (c_ctx + v)
+                    p_mle = count / float(c_ctx) if c_ctx > 0 else 0.0
+                    results.append({
+                        "next_word": w3,
+                        "count": count,
+                        "smoothed_prob": p_smooth,
+                        "mle_prob": p_mle
+                    })
+
+        results.sort(key=lambda x: x["count"], reverse=True)
+        return results[:top_k]
 
     def score_sentence(self, sentence_tokens: List[str]) -> Tuple[float, int]:
         """
